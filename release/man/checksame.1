@@ -1,0 +1,28 @@
+.TH "CHECKSAME" "1" "December 2020" "CheckSame v0.1.0" "User Commands"
+.SH NAME
+CheckSame \- Manual page for checksame v0.1.0.
+.SH DESCRIPTION
+CheckSame generates a single Blake3 hash from any number of files or directories.
+.SS USAGE:
+.TP
+checksame [FLAGS] [OPTIONS] <PATH(s)…>
+.SS FLAGS:
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help information.
+.TP
+\fB\-\-reset\fR
+Reset any previously\-saved hash keys before starting.
+.TP
+\fB\-V\fR, \fB\-\-version\fR
+Print program version.
+.SS OPTIONS:
+.TP
+\fB\-k\fR, \fB\-\-key\fR KEY
+Store checksum under this keyname for change detection.
+.TP
+\fB\-l\fR, \fB\-\-list\fR <FILE>
+Read file paths from this text file.
+.SS <PATH(S)…>:
+.TP
+Any number of files and directories to crawl and crunch.
