@@ -2,7 +2,7 @@
 
 CheckSame is a recursive, cumulative file hasher for x86-64 Linux machines.
 
-By default, it simply prints a Blake3 hash representing all file paths passed to it, but it can also be used for cached change detection by passing `-k` or `--key`, in which case it will output:
+By default, it simply prints a Blake3 hash representing all file paths passed to it, but it can also be used for cached change detection by passing `-k` or `--key` — any arbitrary string made up of alphanumeric characters, `-`, and/or `_` — in which case it will output:
 
 | Value | Meaning |
 | ----- | ------- |
@@ -10,7 +10,7 @@ By default, it simply prints a Blake3 hash representing all file paths passed to
 | 0 | No change detected. |
 | 1 | Something changed. |
 
-The latter can be used as a quick bypass for expensive build routines, etc.
+The key comparison mode is primarily intended to provide an efficient bypass for expensive build routines, etc.
 
 
 
@@ -48,11 +48,11 @@ For example:
 # Generate checksum for one file.
 checksame /path/to/app.js
 
-# Generate cumulative checksum for all files in folder.
+# Generate cumulative checksum for all files in a folder.
 checksame /path/to/assets
 
-# Check if anything changed.
-checksame --key MyAssets /path/to/assets
+# Avoid doing something expensive if nothing changed.
+[ "$( checksame -k MyTask -l /path/list.txt )" = "0" ] || ./expensive-task
 ```
 
 
