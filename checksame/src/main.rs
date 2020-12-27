@@ -152,7 +152,7 @@ impl fmt::Display for CheckSameKind {
 /// Main.
 fn main() {
 	// Parse CLI arguments.
-	let mut args = Argue::new(FLAG_REQUIRED)
+	let args = Argue::new(FLAG_REQUIRED)
 		.with_version(b"CheckSame", env!("CARGO_PKG_VERSION").as_bytes())
 		.with_help(helper)
 		.with_list();
@@ -160,13 +160,8 @@ fn main() {
 	// Reset before we begin?
 	if args.switch("--reset") { reset(); }
 
-	// Hold the key for later.
-	let key: String = args.option2("-k", "--key")
-		.map(|x| x.chars()
-			.filter(|y| matches!(y, '-' | '_' | 'a'..='z' | 'A'..='Z' | '0'..='9'))
-			.collect::<String>()
-		)
-		.unwrap_or_default();
+	// Are we in check mode?
+	let cache = args.switch2("-c", "--cache");
 
 	// Pull the file list.
 	let mut files: Vec<PathBuf> = Witcher::default()
@@ -199,12 +194,25 @@ fn main() {
 		)
 		.finalize();
 
-	// Just print the hash.
-	if key.is_empty() { println!("{}", chk.to_hex()); }
 	// Compare the old and new hash, save it, and print the state.
-	else {
+	if cache {
+		// Generate a cache key from the collective path names.
+		let key: String = files.iter()
+			.fold(
+				blake3::Hasher::new(),
+				|mut h, p| {
+					h.update(fyi_witcher::utility::path_as_bytes(p));
+					h
+				}
+			)
+			.finalize()
+			.to_hex()
+			.to_string();
+
 		println!("{}", save_compare(chk.as_bytes(), key));
 	}
+	// Just print the hash.
+	else { println!("{}", chk.to_hex()); }
 }
 
 /// Hash File.
@@ -243,20 +251,23 @@ USAGE:
     checksame [FLAGS] [OPTIONS] <PATH(S)>...
 
 FLAGS:
+    -c, --cache       Cache the hash and output the status.
     -h, --help        Prints help information.
         --reset       Reset any previously-saved hash keys before starting.
     -V, --version     Prints version information.
 
 OPTIONS:
-    -k, --key <list>     Store checksum under this keyname for change detection.
     -l, --list <list>    Read file paths from this list.
 
 ARGS:
     <PATH(S)>...    One or more files or directories to compress.
 
-When no comparison key is provided, the 64-character (hex) hash will be
-printed to STDOUT. Otherwise a value of -1, 0, or 1 will be printed, indicating
-NEW, UNCHANGED, or CHANGED, respectively.
+By default, this will print a single 64-character Blake3 hash for the file(s)
+to STDOUT.
+
+In --cache mode, the hash will be cached and compared against the previous run.
+A value of -1, 0, or 1 will be printed instead, indicating NEW, UNCHANGED, or
+CHANGED, respectively.
 
 ",
 		"\x1b[38;5;199mCheckSame\x1b[0;38;5;69m v",
