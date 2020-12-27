@@ -184,10 +184,11 @@ fn main() {
 		std::process::exit(1);
 	}
 
-	// Sort to keep results consistent.
+	// Sort paths to keep results consistent.
 	files.sort();
 
-	// Add up all the hashes, then hash that for the final checksum.
+	// It is faster to hash each file separately and then hash the hashes
+	// rather than feeding the byte content of each file into a single hasher.
 	let chk = files.iter()
 		.fold(
 			blake3::Hasher::new(),
@@ -196,14 +197,13 @@ fn main() {
 				h
 			}
 		)
-		.finalize()
-		.to_hex();
+		.finalize();
 
 	// Just print the hash.
-	if key.is_empty() { println!("{:?}", chk); }
+	if key.is_empty() { println!("{}", chk.to_hex()); }
 	// Compare the old and new hash, save it, and print the state.
 	else {
-		println!("{}", save_compare(&chk, key));
+		println!("{}", save_compare(chk.as_bytes(), key));
 	}
 }
 
@@ -214,72 +214,6 @@ fn hash_file(path: &PathBuf) -> Option<[u8; 32]> {
 	io::copy(&mut file, &mut hasher).ok()?;
 	let hash = hasher.finalize();
 	Some(*hash.as_bytes())
-}
-
-/// Reset.
-fn reset() {
-	if let Ok(entries) = std::fs::read_dir(tmp_dir()) {
-		entries
-			.filter_map(std::result::Result::ok)
-			.for_each(|x| {
-				let path = x.path();
-				if path.is_file() {
-					let _ = std::fs::remove_file(path);
-				}
-			});
-	}
-}
-
-/// Save/Compare.
-fn save_compare(chk: &str, key: String) -> CheckSameKind {
-	use std::io::Write;
-
-	let mut file = tmp_dir();
-	file.push(key);
-
-	let mut changed: CheckSameKind = CheckSameKind::New;
-
-	// Did it already exist? Compare the new and old values.
-	if file.is_file() {
-		if std::fs::read_to_string(&file).unwrap_or_default() == chk {
-			changed = CheckSameKind::Same;
-		}
-		else {
-			changed = CheckSameKind::Changed;
-		}
-	}
-
-	// Save it.
-	if std::fs::File::create(&file)
-		.and_then(
-			|mut out|
-			out.write_all(chk.as_bytes()).and_then(|_| out.flush())
-		)
-		.is_err()
-	{
-		MsgKind::Error.into_msg("Unable to store checksum.")
-			.eprintln();
-		std::process::exit(1);
-	}
-
-	changed
-}
-
-/// Get/Make Temporary Directory.
-fn tmp_dir() -> PathBuf {
-	let mut dir = std::env::temp_dir();
-	dir.push("checksame");
-
-	if ! dir.is_dir() && (dir.is_file() || std::fs::create_dir(&dir).is_err()) {
-		MsgKind::Error.into_msg(&format!(
-			"Unable to create temporary directory {:?}.",
-			&dir
-		))
-			.eprintln();
-		std::process::exit(1);
-	}
-
-	dir
 }
 
 #[cold]
@@ -320,12 +254,78 @@ OPTIONS:
 ARGS:
     <PATH(S)>...    One or more files or directories to compress.
 
-When no key is provided, the hash will be printed. Otherwise a value of -1, 0,
-or 1 will be printed, indicating NEW, UNCHANGED, or CHANGED, respectively.
+When no comparison key is provided, the 64-character (hex) hash will be
+printed to STDOUT. Otherwise a value of -1, 0, or 1 will be printed, indicating
+NEW, UNCHANGED, or CHANGED, respectively.
 
 ",
 		"\x1b[38;5;199mCheckSame\x1b[0;38;5;69m v",
 		env!("CARGO_PKG_VERSION"),
 		"\x1b[0m",
 	)).print()
+}
+
+/// Reset.
+fn reset() {
+	if let Ok(entries) = std::fs::read_dir(tmp_dir()) {
+		entries
+			.filter_map(std::result::Result::ok)
+			.for_each(|x| {
+				let path = x.path();
+				if path.is_file() {
+					let _ = std::fs::remove_file(path);
+				}
+			});
+	}
+}
+
+/// Save/Compare.
+fn save_compare(chk: &[u8; 32], key: String) -> CheckSameKind {
+	use std::io::Write;
+
+	let mut file = tmp_dir();
+	file.push(key);
+
+	// Did it already exist? Compare the new and old values.
+	let mut changed: CheckSameKind = CheckSameKind::New;
+	if file.is_file() {
+		if std::fs::read(&file).unwrap_or_default() == chk {
+			changed = CheckSameKind::Same;
+		}
+		else {
+			changed = CheckSameKind::Changed;
+		}
+	}
+
+	// Save it.
+	if std::fs::File::create(&file)
+		.and_then(
+			|mut out|
+			out.write_all(chk).and_then(|_| out.flush())
+		)
+		.is_err()
+	{
+		MsgKind::Error.into_msg("Unable to store checksum.")
+			.eprintln();
+		std::process::exit(1);
+	}
+
+	changed
+}
+
+/// Get/Make Temporary Directory.
+fn tmp_dir() -> PathBuf {
+	let mut dir = std::env::temp_dir();
+	dir.push("checksame");
+
+	if ! dir.is_dir() && (dir.is_file() || std::fs::create_dir(&dir).is_err()) {
+		MsgKind::Error.into_msg(&format!(
+			"Unable to create temporary directory {:?}.",
+			&dir
+		))
+			.eprintln();
+		std::process::exit(1);
+	}
+
+	dir
 }
