@@ -1,12 +1,15 @@
-.TH "CHECKSAME" "1" "December 2020" "CheckSame v0.1.2" "User Commands"
+.TH "CHECKSAME" "1" "December 2020" "CheckSame v0.1.3" "User Commands"
 .SH NAME
-CheckSame \- Manual page for checksame v0.1.2.
+CheckSame \- Manual page for checksame v0.1.3.
 .SH DESCRIPTION
 CheckSame generates a single Blake3 hash from any number of files or directories.
 .SS USAGE:
 .TP
 checksame [FLAGS] [OPTIONS] <PATH(s)…>
 .SS FLAGS:
+.TP
+\fB\-c\fR, \fB\-\-cache\fR
+Cache the hash and output the status.
 .TP
 \fB\-h\fR, \fB\-\-help\fR
 Print help information.
@@ -18,15 +21,12 @@ Reset any previously\-saved hash keys before starting.
 Print program version.
 .SS OPTIONS:
 .TP
-\fB\-k\fR, \fB\-\-key\fR KEY
-Store checksum under this keyname for change detection.
-.TP
 \fB\-l\fR, \fB\-\-list\fR <FILE>
 Read file paths from this text file.
 .SS <PATH(S)…>:
 .TP
 Any number of files and directories to crawl and crunch.
 .SH OUTPUT
-When no comparison key is provided, the 64\-character (hex) hash will be printed to STDOUT.
+By default, this will print a single 64\-character Blake3 hash for the file(s) to STDOUT.
 .RE
-Otherwise a value of \-1, 0, or 1 will be printed, indicating NEW, UNCHANGED, or CHANGED, respectively.
+In \-\-cache mode, the hash will be cached and compared against the previous run. A value of \-1, 0, or 1 will be printed instead, indicating NEW, UNCHANGED, or CHANGED, respectively.

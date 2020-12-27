@@ -5,6 +5,10 @@ _basher___checksame() {
 	prev="${COMP_WORDS[COMP_CWORD-1]}"
 	opts=()
 
+	if [[ ! " ${COMP_LINE} " =~ " -c " ]] && [[ ! " ${COMP_LINE} " =~ " --cache " ]]; then
+		opts+=("-c")
+		opts+=("--cache")
+	fi
 	if [[ ! " ${COMP_LINE} " =~ " -h " ]] && [[ ! " ${COMP_LINE} " =~ " --help " ]]; then
 		opts+=("-h")
 		opts+=("--help")
@@ -13,10 +17,6 @@ _basher___checksame() {
 	if [[ ! " ${COMP_LINE} " =~ " -V " ]] && [[ ! " ${COMP_LINE} " =~ " --version " ]]; then
 		opts+=("-V")
 		opts+=("--version")
-	fi
-	if [[ ! " ${COMP_LINE} " =~ " -k " ]] && [[ ! " ${COMP_LINE} " =~ " --key " ]]; then
-		opts+=("-k")
-		opts+=("--key")
 	fi
 	if [[ ! " ${COMP_LINE} " =~ " -l " ]] && [[ ! " ${COMP_LINE} " =~ " --list " ]]; then
 		opts+=("-l")
