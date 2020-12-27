@@ -1,6 +1,6 @@
 [package]
 name = "checksame"
-version = "0.1.2"
+version = "0.1.3"
 license = "WTFPL"
 authors = ["Josh Stoik <josh@blobfolio.com>"]
 edition = "2018"
@@ -27,6 +27,11 @@ bash-dir = "../release/completions"
 man-dir = "../release/man"
 
 [[package.metadata.bashman.switches]]
+short = "-c"
+long = "--cache"
+description = "Cache the hash and output the status."
+
+[[package.metadata.bashman.switches]]
 short = "-h"
 long = "--help"
 description = "Print help information."
@@ -39,13 +44,6 @@ description = "Reset any previously-saved hash keys before starting."
 short = "-V"
 long = "--version"
 description = "Print program version."
-
-[[package.metadata.bashman.options]]
-short = "-k"
-long = "--key"
-label = "KEY"
-description = "Store checksum under this keyname for change detection."
-path = false
 
 [[package.metadata.bashman.options]]
 short = "-l"
@@ -62,8 +60,8 @@ description = "Any number of files and directories to crawl and crunch."
 name = "OUTPUT"
 inside = false
 lines = [
-	"When no comparison key is provided, the 64-character (hex) hash will be printed to STDOUT.",
-	"Otherwise a value of -1, 0, or 1 will be printed, indicating NEW, UNCHANGED, or CHANGED, respectively."
+	"By default, this will print a single 64-character Blake3 hash for the file(s) to STDOUT.",
+	"In --cache mode, the hash will be cached and compared against the previous run. A value of -1, 0, or 1 will be printed instead, indicating NEW, UNCHANGED, or CHANGED, respectively."
 ]
 
 [dependencies]

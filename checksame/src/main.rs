@@ -1,9 +1,13 @@
 /*!
 # `CheckSame`
 
-`CheckSame` is a recursive, cumulative file hasher for x86-64 Linux machines.
+`CheckSame` is a recursive, cumulative Blake3 file hasher for x86-64 Linux machines.
 
-By default, it simply prints a `Blake3` hash representing all file paths passed to it, but it can also be used for cached change detection by passing `-k` or `--key` — any arbitrary string made up of alphanumeric characters, `-`, and/or `_` — in which case it will output:
+It is "cumulative" in the sense that it computes a _single_ hash representing all of the files passed to it, rather than individual hashes for each file.
+
+By default, this hash is simply printed to STDOUT.
+
+However, when run with `-c` or `--cache`, the resulting hash will be stored and compared against the previous run. In this mode, the program will output one of:
 
 | Value | Meaning |
 | ----- | ------- |
@@ -11,7 +15,9 @@ By default, it simply prints a `Blake3` hash representing all file paths passed 
 | 0 | No change detected. |
 | 1 | Something changed. |
 
-The key comparison mode is primarily intended to provide an efficient bypass for expensive build routines, etc.
+The cache mode is primarily intended to provide an efficient bypass for expensive build routines, or as a way to quickly see if a directory's contents have changed (beyond mere timestamp updates).
+
+The cache lives in `/tmp/checksame` and can be cleared by running the program with the `--reset` flag, or simply deleting the files in that directory. On most systems, that directory should disappear automatically on reboot.
 
 
 
@@ -37,8 +43,8 @@ It's easy. Just run `checksame [FLAGS] [OPTIONS] <PATH(S)>…`.
 
 The following flags and options are available:
 ```bash
+-c, --cache       Cache the hash and output the status.
 -h, --help        Prints help information.
--k, --key <key>   Store checksum under this keyname for change detection.
 -l, --list <list> Read file paths from this list.
     --reset       Reset any previously-saved hash keys before starting.
 -V, --version     Prints version information.
@@ -46,14 +52,13 @@ The following flags and options are available:
 
 For example:
 ```bash
-# Generate checksum for one file.
-checksame /path/to/app.js
-
-# Generate cumulative checksum for all files in a folder.
-checksame /path/to/assets
+# Generate checksum by passing any number of file and directory paths.
+# You can also place paths in a text file — one per line — and add
+# that to the mix with the -l option.
+checksame -l /path/to/list.txt /path/to/app.js /path/to/folder
 
 # Avoid doing something expensive if nothing changed.
-[ "$( checksame -k MyTask -l /path/list.txt )" = "0" ] || ./expensive-task
+[ "$( checksame -c -l /path/list.txt )" = "0" ] || ./expensive-task
 ```
 
 
@@ -152,7 +157,7 @@ impl fmt::Display for CheckSameKind {
 /// Main.
 fn main() {
 	// Parse CLI arguments.
-	let mut args = Argue::new(FLAG_REQUIRED)
+	let args = Argue::new(FLAG_REQUIRED)
 		.with_version(b"CheckSame", env!("CARGO_PKG_VERSION").as_bytes())
 		.with_help(helper)
 		.with_list();
@@ -160,13 +165,8 @@ fn main() {
 	// Reset before we begin?
 	if args.switch("--reset") { reset(); }
 
-	// Hold the key for later.
-	let key: String = args.option2("-k", "--key")
-		.map(|x| x.chars()
-			.filter(|y| matches!(y, '-' | '_' | 'a'..='z' | 'A'..='Z' | '0'..='9'))
-			.collect::<String>()
-		)
-		.unwrap_or_default();
+	// Are we in check mode?
+	let cache = args.switch2("-c", "--cache");
 
 	// Pull the file list.
 	let mut files: Vec<PathBuf> = Witcher::default()
@@ -199,12 +199,25 @@ fn main() {
 		)
 		.finalize();
 
-	// Just print the hash.
-	if key.is_empty() { println!("{}", chk.to_hex()); }
 	// Compare the old and new hash, save it, and print the state.
-	else {
+	if cache {
+		// Generate a cache key from the collective path names.
+		let key: String = files.iter()
+			.fold(
+				blake3::Hasher::new(),
+				|mut h, p| {
+					h.update(fyi_witcher::utility::path_as_bytes(p));
+					h
+				}
+			)
+			.finalize()
+			.to_hex()
+			.to_string();
+
 		println!("{}", save_compare(chk.as_bytes(), key));
 	}
+	// Just print the hash.
+	else { println!("{}", chk.to_hex()); }
 }
 
 /// Hash File.
@@ -243,20 +256,23 @@ USAGE:
     checksame [FLAGS] [OPTIONS] <PATH(S)>...
 
 FLAGS:
+    -c, --cache       Cache the hash and output the status.
     -h, --help        Prints help information.
         --reset       Reset any previously-saved hash keys before starting.
     -V, --version     Prints version information.
 
 OPTIONS:
-    -k, --key <list>     Store checksum under this keyname for change detection.
     -l, --list <list>    Read file paths from this list.
 
 ARGS:
     <PATH(S)>...    One or more files or directories to compress.
 
-When no comparison key is provided, the 64-character (hex) hash will be
-printed to STDOUT. Otherwise a value of -1, 0, or 1 will be printed, indicating
-NEW, UNCHANGED, or CHANGED, respectively.
+By default, this will print a single 64-character Blake3 hash for the file(s)
+to STDOUT.
+
+In --cache mode, the hash will be cached and compared against the previous run.
+A value of -1, 0, or 1 will be printed instead, indicating NEW, UNCHANGED, or
+CHANGED, respectively.
 
 ",
 		"\x1b[38;5;199mCheckSame\x1b[0;38;5;69m v",

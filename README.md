@@ -1,8 +1,12 @@
 # CheckSame
 
-CheckSame is a recursive, cumulative file hasher for x86-64 Linux machines.
+CheckSame is a recursive, cumulative Blake3 file hasher for x86-64 Linux machines.
 
-By default, it simply prints a Blake3 hash representing all file paths passed to it, but it can also be used for cached change detection by passing `-k` or `--key` — any arbitrary string made up of alphanumeric characters, `-`, and/or `_` — in which case it will output:
+It is "cumulative" in the sense that it computes a _single_ hash representing all of the files passed to it, rather than individual hashes for each file.
+
+By default, this hash is simply printed to STDOUT.
+
+However, when run with `-c` or `--cache`, the resulting hash will be stored and compared against the previous run. In this mode, the program will output one of:
 
 | Value | Meaning |
 | ----- | ------- |
@@ -10,7 +14,9 @@ By default, it simply prints a Blake3 hash representing all file paths passed to
 | 0 | No change detected. |
 | 1 | Something changed. |
 
-The key comparison mode is primarily intended to provide an efficient bypass for expensive build routines, etc.
+The cache mode is primarily intended to provide an efficient bypass for expensive build routines, or as a way to quickly see if a directory's contents have changed (beyond mere timestamp updates).
+
+The cache lives in `/tmp/checksame` and can be cleared by running the program with the `--reset` flag, or simply deleting the files in that directory. On most systems, that directory should disappear automatically on reboot.
 
 
 
@@ -36,8 +42,8 @@ It's easy. Just run `checksame [FLAGS] [OPTIONS] <PATH(S)>…`.
 
 The following flags and options are available:
 ```bash
+-c, --cache       Cache the hash and output the status.
 -h, --help        Prints help information.
--k, --key <key>   Store checksum under this keyname for change detection.
 -l, --list <list> Read file paths from this list.
     --reset       Reset any previously-saved hash keys before starting.
 -V, --version     Prints version information.
@@ -45,14 +51,13 @@ The following flags and options are available:
 
 For example:
 ```bash
-# Generate checksum for one file.
-checksame /path/to/app.js
-
-# Generate cumulative checksum for all files in a folder.
-checksame /path/to/assets
+# Generate checksum by passing any number of file and directory paths.
+# You can also place paths in a text file — one per line — and add
+# that to the mix with the -l option.
+checksame -l /path/to/list.txt /path/to/app.js /path/to/folder
 
 # Avoid doing something expensive if nothing changed.
-[ "$( checksame -k MyTask -l /path/list.txt )" = "0" ] || ./expensive-task
+[ "$( checksame -c -l /path/list.txt )" = "0" ] || ./expensive-task
 ```
 
 
