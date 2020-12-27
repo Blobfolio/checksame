@@ -174,6 +174,11 @@ fn main() {
 		.build();
 
 	if files.is_empty() {
+		// We don't need to require new files when resetting.
+		if args.switch("--reset") {
+			return;
+		}
+
 		MsgKind::Error.into_msg("At least one valid file path is required.")
 			.eprintln();
 		std::process::exit(1);
