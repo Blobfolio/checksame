@@ -1,6 +1,6 @@
-.TH "CHECKSAME" "1" "December 2020" "CheckSame v0.1.0" "User Commands"
+.TH "CHECKSAME" "1" "December 2020" "CheckSame v0.1.1" "User Commands"
 .SH NAME
-CheckSame \- Manual page for checksame v0.1.0.
+CheckSame \- Manual page for checksame v0.1.1.
 .SH DESCRIPTION
 CheckSame generates a single Blake3 hash from any number of files or directories.
 .SS USAGE:
@@ -26,3 +26,7 @@ Read file paths from this text file.
 .SS <PATH(S)…>:
 .TP
 Any number of files and directories to crawl and crunch.
+.SH OUTPUT
+When no comparison key is provided, the 64\-character (hex) hash will be printed to STDOUT.
+.RE
+Otherwise a value of \-1, 0, or 1 will be printed, indicating NEW, UNCHANGED, or CHANGED, respectively.
