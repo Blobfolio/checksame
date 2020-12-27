@@ -37,7 +37,7 @@ It's easy. Just run `checksame [FLAGS] [OPTIONS] <PATH(S)>…`.
 The following flags and options are available:
 ```bash
 -h, --help        Prints help information.
--k, --key <list>  Store checksum under this keyname for change detection.
+-k, --key <key>   Store checksum under this keyname for change detection.
 -l, --list <list> Read file paths from this list.
     --reset       Reset any previously-saved hash keys before starting.
 -V, --version     Prints version information.
