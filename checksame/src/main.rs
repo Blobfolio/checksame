@@ -161,9 +161,14 @@ fn main() {
 	if args.switch("--reset") { reset(); }
 
 	// Hold the key for later.
-	let key: String = args.option2("-k", "--key").map(String::from).unwrap_or_default();
+	let key: String = args.option2("-k", "--key")
+		.map(|x| x.chars()
+			.filter(|y| matches!(y, '-' | '_' | 'a'..='z' | 'A'..='Z' | '0'..='9'))
+			.collect::<String>()
+		)
+		.unwrap_or_default();
 
-	// Pull the file list everything.
+	// Pull the file list.
 	let mut files: Vec<PathBuf> = Witcher::default()
 		.with_paths(args.args())
 		.build();
