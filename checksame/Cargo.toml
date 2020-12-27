@@ -1,6 +1,6 @@
 [package]
 name = "checksame"
-version = "0.1.0"
+version = "0.1.1"
 license = "WTFPL"
 authors = ["Josh Stoik <josh@blobfolio.com>"]
 edition = "2018"
@@ -57,6 +57,14 @@ path = true
 [[package.metadata.bashman.arguments]]
 label = "<PATH(s)…>"
 description = "Any number of files and directories to crawl and crunch."
+
+[[package.metadata.bashman.sections]]
+name = "OUTPUT"
+inside = false
+lines = [
+	"When no comparison key is provided, the 64-character (hex) hash will be printed to STDOUT.",
+	"Otherwise a value of -1, 0, or 1 will be printed, indicating NEW, UNCHANGED, or CHANGED, respectively."
+]
 
 [dependencies]
 blake3 = "0.3.*"
