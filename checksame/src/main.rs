@@ -201,20 +201,23 @@ fn main() {
 
 	// Compare the old and new hash, save it, and print the state.
 	if cache {
-		// Generate a cache key from the collective path names.
-		let key: String = files.iter()
-			.fold(
-				blake3::Hasher::new(),
-				|mut h, p| {
-					h.update(fyi_witcher::utility::path_as_bytes(p));
-					h
-				}
+		println!(
+			"{}",
+			save_compare(
+				chk.as_bytes(),
+				files.iter()
+					.fold(
+						blake3::Hasher::new(),
+						|mut h, p| {
+							h.update(fyi_witcher::utility::path_as_bytes(p));
+							h
+						}
+					)
+					.finalize()
+					.to_hex()
+					.to_string()
 			)
-			.finalize()
-			.to_hex()
-			.to_string();
-
-		println!("{}", save_compare(chk.as_bytes(), key));
+		);
 	}
 	// Just print the hash.
 	else { println!("{}", chk.to_hex()); }
