@@ -337,7 +337,7 @@ fn tmp_dir() -> PathBuf {
 	let mut dir = std::env::temp_dir();
 	dir.push("checksame");
 
-	if ! dir.is_dir() && (dir.is_file() || std::fs::create_dir(&dir).is_err()) {
+	if ! dir.is_dir() && (dir.exists() || std::fs::create_dir(&dir).is_err()) {
 		MsgKind::Error.into_msg(&format!(
 			"Unable to create temporary directory {:?}.",
 			&dir
