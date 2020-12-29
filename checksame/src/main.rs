@@ -205,7 +205,7 @@ fn main() {
 			"{}",
 			save_compare(
 				chk.as_bytes(),
-				files.iter()
+				&files.iter()
 					.fold(
 						blake3::Hasher::new(),
 						|mut h, p| {
@@ -215,7 +215,6 @@ fn main() {
 					)
 					.finalize()
 					.to_hex()
-					.to_string()
 			)
 		);
 	}
@@ -299,7 +298,7 @@ fn reset() {
 }
 
 /// Save/Compare.
-fn save_compare(chk: &[u8; 32], key: String) -> CheckSameKind {
+fn save_compare(chk: &[u8; 32], key: &str) -> CheckSameKind {
 	use std::io::Write;
 
 	let mut file = tmp_dir();
