@@ -1,6 +1,6 @@
 # CheckSame
 
-CheckSame is a recursive, cumulative Blake3 file hasher for x86-64 Linux machines.
+CheckSame is a recursive, cumulative [Blake3](https://en.wikipedia.org/wiki/BLAKE_(hash_function)#BLAKE3) file hasher for x86-64 Linux machines.
 
 It is "cumulative" in the sense that it computes a _single_ hash representing all of the files passed to it, rather than individual hashes for each file.
 
