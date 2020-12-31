@@ -201,20 +201,22 @@ fn main() {
 
 	// Compare the old and new hash, save it, and print the state.
 	if cache {
-		// Generate a cache key from the collective path names.
-		let key: String = files.iter()
-			.fold(
-				blake3::Hasher::new(),
-				|mut h, p| {
-					h.update(fyi_witcher::utility::path_as_bytes(p));
-					h
-				}
+		println!(
+			"{}",
+			save_compare(
+				chk.as_bytes(),
+				&files.iter()
+					.fold(
+						blake3::Hasher::new(),
+						|mut h, p| {
+							h.update(fyi_witcher::utility::path_as_bytes(p));
+							h
+						}
+					)
+					.finalize()
+					.to_hex()
 			)
-			.finalize()
-			.to_hex()
-			.to_string();
-
-		println!("{}", save_compare(chk.as_bytes(), key));
+		);
 	}
 	// Just print the hash.
 	else { println!("{}", chk.to_hex()); }
@@ -296,7 +298,7 @@ fn reset() {
 }
 
 /// Save/Compare.
-fn save_compare(chk: &[u8; 32], key: String) -> CheckSameKind {
+fn save_compare(chk: &[u8; 32], key: &str) -> CheckSameKind {
 	use std::io::Write;
 
 	let mut file = tmp_dir();
@@ -334,7 +336,7 @@ fn tmp_dir() -> PathBuf {
 	let mut dir = std::env::temp_dir();
 	dir.push("checksame");
 
-	if ! dir.is_dir() && (dir.is_file() || std::fs::create_dir(&dir).is_err()) {
+	if ! dir.is_dir() && (dir.exists() || std::fs::create_dir(&dir).is_err()) {
 		MsgKind::Error.into_msg(&format!(
 			"Unable to create temporary directory {:?}.",
 			&dir
