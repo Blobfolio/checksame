@@ -118,10 +118,7 @@ use fyi_menu::{
 	Argue,
 	FLAG_REQUIRED,
 };
-use fyi_msg::{
-	Msg,
-	MsgKind,
-};
+use fyi_msg::Msg;
 use fyi_witcher::Witcher;
 use std::{
 	fmt,
@@ -158,7 +155,7 @@ impl fmt::Display for CheckSameKind {
 fn main() {
 	// Parse CLI arguments.
 	let args = Argue::new(FLAG_REQUIRED)
-		.with_version(b"CheckSame", env!("CARGO_PKG_VERSION").as_bytes())
+		.with_version("CheckSame", env!("CARGO_PKG_VERSION"))
 		.with_help(helper)
 		.with_list();
 
@@ -179,9 +176,7 @@ fn main() {
 			return;
 		}
 
-		MsgKind::Error.into_msg("At least one valid file path is required.")
-			.eprintln();
-		std::process::exit(1);
+		Msg::error("At least one valid file path is required.").die(1);
 	}
 
 	// Sort paths to keep results consistent.
@@ -234,7 +229,7 @@ fn hash_file(path: &PathBuf) -> Option<[u8; 32]> {
 #[cold]
 /// Print Help.
 fn helper(_: Option<&str>) {
-	Msg::from(format!(
+	Msg::plain(format!(
 		r"
           ______
       .-'` .    `'-.
@@ -323,9 +318,7 @@ fn save_compare(chk: &[u8; 32], key: &str) -> CheckSameKind {
 		)
 		.is_err()
 	{
-		MsgKind::Error.into_msg("Unable to store checksum.")
-			.eprintln();
-		std::process::exit(1);
+		Msg::error("Unable to store checksum.").die(1);
 	}
 
 	changed
@@ -337,12 +330,10 @@ fn tmp_dir() -> PathBuf {
 	dir.push("checksame");
 
 	if ! dir.is_dir() && (dir.exists() || std::fs::create_dir(&dir).is_err()) {
-		MsgKind::Error.into_msg(&format!(
+		Msg::error(&format!(
 			"Unable to create temporary directory {:?}.",
 			&dir
-		))
-			.eprintln();
-		std::process::exit(1);
+		)).die(1);
 	}
 
 	dir
