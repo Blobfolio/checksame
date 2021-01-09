@@ -61,16 +61,9 @@ checksame -l /path/to/list.txt /path/to/app.js /path/to/folder
 ```
 
 
-
-## Credits
-
-| Library | License | Author |
-| ---- | ---- | ---- |
-| [blake3](https://crates.io/crates/blake3) | CC0-1.0 OR Apache-2.0 | Jack O'Connor |
-
-
-
 ## License
+
+See also: [CREDITS.md](CREDITS.md)
 
 Copyright © 2021 [Blobfolio, LLC](https://blobfolio.com) &lt;hello@blobfolio.com&gt;
 
