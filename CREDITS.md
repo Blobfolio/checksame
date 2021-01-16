@@ -1713,10 +1713,11 @@ SOFTWARE.
 
 **Used By:**
 
-* [checksame 0.1.5](https://crates.io/crates/checksame)
-* [fyi_menu 0.5.0](https://github.com/Blobfolio/fyi)
-* [fyi_msg 0.5.0](https://github.com/Blobfolio/fyi)
-* [fyi_witcher 0.5.0](https://github.com/Blobfolio/fyi)
+* [checksame 0.1.6](https://crates.io/crates/checksame)
+* [fyi_menu 0.5.2](https://github.com/Blobfolio/fyi)
+* [fyi_msg 0.5.2](https://github.com/Blobfolio/fyi)
+* [fyi_num 0.5.2](https://github.com/Blobfolio/fyi)
+* [fyi_witcher 0.5.2](https://github.com/Blobfolio/fyi)
 
 
 ```
