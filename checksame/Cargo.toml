@@ -1,6 +1,6 @@
 [package]
 name = "checksame"
-version = "0.1.6"
+version = "0.1.7"
 license = "WTFPL"
 authors = ["Josh Stoik <josh@blobfolio.com>"]
 edition = "2018"
@@ -69,12 +69,12 @@ blake3 = "0.3.*"
 
 [dependencies.fyi_menu]
 git = "https://github.com/Blobfolio/fyi.git"
-tag = "v0.5.2"
+tag = "v0.5.4"
 
 [dependencies.fyi_msg]
 git = "https://github.com/Blobfolio/fyi.git"
-tag = "v0.5.2"
+tag = "v0.5.4"
 
 [dependencies.fyi_witcher]
 git = "https://github.com/Blobfolio/fyi.git"
-tag = "v0.5.2"
+tag = "v0.5.4"
