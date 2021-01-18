@@ -60,29 +60,6 @@ checksame -l /path/to/list.txt /path/to/app.js /path/to/folder
 # Avoid doing something expensive if nothing changed.
 [ "$( checksame -c -l /path/list.txt )" = "0" ] || ./expensive-task
 ```
-
-
-
-## License
-
-Copyright © 2020 [Blobfolio, LLC](https://blobfolio.com) &lt;hello@blobfolio.com&gt;
-
-This work is free. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2.
-
-    DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
-    Version 2, December 2004
-
-    Copyright (C) 2004 Sam Hocevar <sam@hocevar.net>
-
-    Everyone is permitted to copy and distribute verbatim or modified
-    copies of this license document, and changing it is allowed as long
-    as the name is changed.
-
-    DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
-    TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
-
-    0. You just DO WHAT THE FUCK YOU WANT TO.
-
 */
 
 #![warn(clippy::filetype_is_file)]
@@ -228,8 +205,8 @@ fn hash_file(path: &PathBuf) -> Option<[u8; 32]> {
 
 #[cold]
 /// Print Help.
-fn helper(_: Option<&str>) {
-	Msg::plain(format!(
+const fn helper() -> &'static str {
+	concat!(
 		r"
           ______
       .-'` .    `'-.
@@ -242,7 +219,7 @@ fn helper(_: Option<&str>) {
 |  ' /     --'
 |  .   '.__\
 ;  :       /
- ;  .     |            ,   {}{}{}
+ ;  .     |            ,   ", "\x1b[38;5;199mCheckSame\x1b[0;38;5;69m v", env!("CARGO_PKG_VERSION"), "\x1b[0m", r"
   ;  .    \           /|   Cumulative file hashing
    \  .    '.       .'/    and change detection.
     '.  '  . `'---'`.'
@@ -272,10 +249,7 @@ A value of -1, 0, or 1 will be printed instead, indicating NEW, UNCHANGED, or
 CHANGED, respectively.
 
 ",
-		"\x1b[38;5;199mCheckSame\x1b[0;38;5;69m v",
-		env!("CARGO_PKG_VERSION"),
-		"\x1b[0m",
-	)).print()
+	)
 }
 
 /// Reset.
