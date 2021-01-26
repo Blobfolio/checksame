@@ -206,7 +206,7 @@ License details for project dependencies are listed below.
 
 **Used By:**
 
-* [ahash 0.6.2](https://github.com/tkaitchuck/ahash)
+* [ahash 0.6.3](https://github.com/tkaitchuck/ahash)
 * [arrayvec 0.5.2](https://github.com/bluss/arrayvec)
 * [cfg-if 0.1.10](https://github.com/alexcrichton/cfg-if)
 * [cfg-if 1.0.0](https://github.com/alexcrichton/cfg-if)
@@ -220,6 +220,7 @@ License details for project dependencies are listed below.
 * [num-integer 0.1.44](https://github.com/rust-num/num-integer)
 * [num-traits 0.2.14](https://github.com/rust-num/num-traits)
 * [num_cpus 1.13.0](https://github.com/seanmonstar/num_cpus)
+* [once_cell 1.5.2](https://github.com/matklad/once_cell)
 * [rayon 1.5.0](https://github.com/rayon-rs/rayon)
 * [rayon-core 1.9.0](https://github.com/rayon-rs/rayon)
 * [scopeguard 1.1.0](https://github.com/bluss/scopeguard)
@@ -647,7 +648,7 @@ limitations under the License.
 
 **Used By:**
 
-* [getrandom 0.2.1](https://github.com/rust-random/getrandom)
+* [getrandom 0.2.2](https://github.com/rust-random/getrandom)
 
 
 ```
@@ -1212,11 +1213,11 @@ SOFTWARE.
 
 **Used By:**
 
-* [checksame 0.1.7](https://crates.io/crates/checksame)
-* [fyi_menu 0.5.4](https://github.com/Blobfolio/fyi)
-* [fyi_msg 0.5.4](https://github.com/Blobfolio/fyi)
-* [fyi_num 0.5.4](https://github.com/Blobfolio/fyi)
-* [fyi_witcher 0.5.4](https://github.com/Blobfolio/fyi)
+* [checksame 0.1.8](https://crates.io/crates/checksame)
+* [fyi_menu 0.5.5](https://github.com/Blobfolio/fyi)
+* [fyi_msg 0.5.5](https://github.com/Blobfolio/fyi)
+* [fyi_num 0.5.5](https://github.com/Blobfolio/fyi)
+* [fyi_witcher 0.5.5](https://github.com/Blobfolio/fyi)
 
 
 ```
