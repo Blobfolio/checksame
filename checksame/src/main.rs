@@ -247,7 +247,6 @@ to STDOUT.
 In --cache mode, the hash will be cached and compared against the previous run.
 A value of -1, 0, or 1 will be printed instead, indicating NEW, UNCHANGED, or
 CHANGED, respectively.
-
 ",
 	)
 }
