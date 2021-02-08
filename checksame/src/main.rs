@@ -168,8 +168,7 @@ fn _main() -> Result<(), ArgueError> {
 		.with_paths(
 			args.args()
 				.iter()
-				.map(|x| PathBuf::from(OsStr::from_bytes(x.as_ref())))
-				.collect::<Vec<PathBuf>>()
+				.map(|x| OsStr::from_bytes(x.as_ref()))
 		)
 		.build();
 
