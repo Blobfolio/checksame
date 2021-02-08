@@ -164,11 +164,7 @@ fn _main() -> Result<(), ArgueError> {
 
 	// Pull the file list.
 	let mut files: Vec<PathBuf> = Witcher::default()
-		.with_paths(
-			args.args()
-				.iter()
-				.map(|x| OsStr::from_bytes(x.as_ref()))
-		)
+		.with_paths(args.args().iter().map(|x| OsStr::from_bytes(x.as_ref())))
 		.build();
 
 	if files.is_empty() {
