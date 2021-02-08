@@ -135,18 +135,17 @@ impl fmt::Display for CheckSameKind {
 
 /// Main.
 fn main() {
-	if let Err(e) = _main() {
-		match e {
-			ArgueError::WantsVersion => {
-				fyi_msg::plain!(concat!("CheckSame v", env!("CARGO_PKG_VERSION")));
-			},
-			ArgueError::WantsHelp => {
-				helper();
-			},
-			_ => {
-				Msg::error(e).die(1);
-			}
-		}
+	match _main() {
+		Err(ArgueError::WantsVersion) => {
+			fyi_msg::plain!(concat!("CheckSame v", env!("CARGO_PKG_VERSION")));
+		},
+		Err(ArgueError::WantsHelp) => {
+			helper();
+		},
+		Err(e) => {
+			Msg::error(e).die(1);
+		},
+		Ok(_) => {},
 	}
 }
 
