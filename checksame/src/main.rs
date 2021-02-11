@@ -93,13 +93,18 @@ checksame -l /path/to/list.txt /path/to/app.js /path/to/folder
 
 use fyi_menu::{
 	Argue,
+	ArgueError,
+	FLAG_HELP,
 	FLAG_REQUIRED,
+	FLAG_VERSION,
 };
 use fyi_msg::Msg;
-use fyi_witcher::Witcher;
+use fyi_witcher::witch;
 use std::{
+	ffi::OsStr,
 	fmt,
 	io,
+	os::unix::ffi::OsStrExt,
 	path::PathBuf,
 };
 
@@ -130,30 +135,45 @@ impl fmt::Display for CheckSameKind {
 
 /// Main.
 fn main() {
+	match _main() {
+		Err(ArgueError::WantsVersion) => {
+			fyi_msg::plain!(concat!("CheckSame v", env!("CARGO_PKG_VERSION")));
+		},
+		Err(ArgueError::WantsHelp) => {
+			helper();
+		},
+		Err(e) => {
+			Msg::error(e).die(1);
+		},
+		Ok(_) => {},
+	}
+}
+
+#[inline]
+/// Actual main.
+fn _main() -> Result<(), ArgueError> {
 	// Parse CLI arguments.
-	let args = Argue::new(FLAG_REQUIRED)
-		.with_version("CheckSame", env!("CARGO_PKG_VERSION"))
-		.with_help(helper)
+	let args = Argue::new(FLAG_HELP | FLAG_REQUIRED | FLAG_VERSION)?
 		.with_list();
 
 	// Reset before we begin?
-	if args.switch("--reset") { reset(); }
+	if args.switch(b"--reset") { reset()?; }
 
 	// Are we in check mode?
-	let cache = args.switch2("-c", "--cache");
+	let cache = args.switch2(b"-c", b"--cache");
 
 	// Pull the file list.
-	let mut files: Vec<PathBuf> = Witcher::default()
-		.with_paths(args.args())
-		.build();
+	let mut files: Vec<PathBuf> = witch(
+		args.args().iter().map(|x| OsStr::from_bytes(x.as_ref()))
+	);
 
 	if files.is_empty() {
 		// We don't need to require new files when resetting.
-		if args.switch("--reset") {
-			return;
+		if args.switch(b"--reset") {
+			return Ok(());
 		}
 
-		Msg::error("At least one valid file path is required.").die(1);
+		return Err(ArgueError::Other("At least one valid file path is required."));
 	}
 
 	// Sort paths to keep results consistent.
@@ -187,11 +207,13 @@ fn main() {
 					)
 					.finalize()
 					.to_hex()
-			)
+			)?
 		);
 	}
 	// Just print the hash.
 	else { println!("{}", chk.to_hex()); }
+
+	Ok(())
 }
 
 /// Hash File.
@@ -205,8 +227,8 @@ fn hash_file(path: &PathBuf) -> Option<[u8; 32]> {
 
 #[cold]
 /// Print Help.
-const fn helper() -> &'static str {
-	concat!(
+fn helper() {
+	fyi_msg::plain!(concat!(
 		r"
           ______
       .-'` .    `'-.
@@ -248,28 +270,31 @@ In --cache mode, the hash will be cached and compared against the previous run.
 A value of -1, 0, or 1 will be printed instead, indicating NEW, UNCHANGED, or
 CHANGED, respectively.
 ",
-	)
+	));
 }
 
 /// Reset.
-fn reset() {
-	if let Ok(entries) = std::fs::read_dir(tmp_dir()) {
-		entries
-			.filter_map(std::result::Result::ok)
-			.for_each(|x| {
-				let path = x.path();
-				if path.is_file() {
-					let _ = std::fs::remove_file(path);
-				}
-			});
-	}
+fn reset() -> Result<(), ArgueError> {
+	let entries = std::fs::read_dir(tmp_dir()?)
+		.map_err(|_| ArgueError::Other("Unable to reset cache."))?;
+
+	entries
+		.filter_map(std::result::Result::ok)
+		.for_each(|x| {
+			let path = x.path();
+			if path.is_file() {
+				let _ = std::fs::remove_file(path);
+			}
+		});
+
+	Ok(())
 }
 
 /// Save/Compare.
-fn save_compare(chk: &[u8; 32], key: &str) -> CheckSameKind {
+fn save_compare(chk: &[u8; 32], key: &str) -> Result<CheckSameKind, ArgueError> {
 	use std::io::Write;
 
-	let mut file = tmp_dir();
+	let mut file = tmp_dir()?;
 	file.push(key);
 
 	// Did it already exist? Compare the new and old values.
@@ -284,30 +309,23 @@ fn save_compare(chk: &[u8; 32], key: &str) -> CheckSameKind {
 	}
 
 	// Save it.
-	if std::fs::File::create(&file)
+	std::fs::File::create(&file)
 		.and_then(
 			|mut out|
 			out.write_all(chk).and_then(|_| out.flush())
 		)
-		.is_err()
-	{
-		Msg::error("Unable to store checksum.").die(1);
-	}
+		.map_err(|_| ArgueError::Other("Unable to save cache."))?;
 
-	changed
+	Ok(changed)
 }
 
 /// Get/Make Temporary Directory.
-fn tmp_dir() -> PathBuf {
+fn tmp_dir() -> Result<PathBuf, ArgueError> {
 	let mut dir = std::env::temp_dir();
 	dir.push("checksame");
 
 	if ! dir.is_dir() && (dir.exists() || std::fs::create_dir(&dir).is_err()) {
-		Msg::error(&format!(
-			"Unable to create temporary directory {:?}.",
-			&dir
-		)).die(1);
+		Err(ArgueError::Other("Unable to create temporary directory."))
 	}
-
-	dir
+	else { Ok(dir) }
 }
