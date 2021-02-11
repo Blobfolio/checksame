@@ -172,9 +172,8 @@ fn _main() -> Result<(), ArgueError> {
 		if args.switch(b"--reset") {
 			return Ok(());
 		}
-		else {
-			return Err(ArgueError::Other("At least one valid file path is required."));
-		}
+
+		return Err(ArgueError::Other("At least one valid file path is required."));
 	}
 
 	// Sort paths to keep results consistent.
