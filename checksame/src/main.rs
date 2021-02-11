@@ -99,7 +99,7 @@ use fyi_menu::{
 	FLAG_VERSION,
 };
 use fyi_msg::Msg;
-use fyi_witcher::Witcher;
+use fyi_witcher::witch;
 use std::{
 	ffi::OsStr,
 	fmt,
@@ -163,9 +163,9 @@ fn _main() -> Result<(), ArgueError> {
 	let cache = args.switch2(b"-c", b"--cache");
 
 	// Pull the file list.
-	let mut files: Vec<PathBuf> = Witcher::default()
-		.with_paths(args.args().iter().map(|x| OsStr::from_bytes(x.as_ref())))
-		.build();
+	let mut files: Vec<PathBuf> = witch(
+		args.args().iter().map(|x| OsStr::from_bytes(x.as_ref()))
+	);
 
 	if files.is_empty() {
 		// We don't need to require new files when resetting.
