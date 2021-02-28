@@ -65,16 +65,10 @@ lines = [
 ]
 
 [dependencies]
+argyle = "0.3.*"
 blake3 = "0.3.*"
-
-[dependencies.fyi_menu]
-git = "https://github.com/Blobfolio/fyi.git"
-tag = "v0.6.1"
+dowser = "0.1.*"
 
 [dependencies.fyi_msg]
 git = "https://github.com/Blobfolio/fyi.git"
-tag = "v0.6.1"
-
-[dependencies.fyi_witcher]
-git = "https://github.com/Blobfolio/fyi.git"
-tag = "v0.6.1"
+branch = "feature/next"
