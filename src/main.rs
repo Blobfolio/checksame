@@ -120,9 +120,7 @@ enum CheckSameKind {
 
 impl fmt::Display for CheckSameKind {
 	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-		write!(
-			f,
-			"{}",
+		f.write_str(
 			match self {
 				Self::New => "-1",
 				Self::Changed => "1",
@@ -134,7 +132,7 @@ impl fmt::Display for CheckSameKind {
 
 
 
-/// Main.
+/// # Main.
 fn main() {
 	match _main() {
 		Ok(_) => {},
@@ -151,7 +149,7 @@ fn main() {
 }
 
 #[inline]
-/// Actual main.
+/// # Actual main.
 fn _main() -> Result<(), ArgyleError> {
 	// Parse CLI arguments.
 	let args = Argue::new(FLAG_HELP | FLAG_REQUIRED | FLAG_VERSION)?
@@ -214,7 +212,7 @@ fn _main() -> Result<(), ArgyleError> {
 	Ok(())
 }
 
-/// Hash File.
+/// # Hash File.
 fn hash_file(path: &Path) -> Option<[u8; 32]> {
 	let mut file = std::fs::File::open(&path).ok()?;
 	let mut hasher = blake3::Hasher::new();
@@ -271,7 +269,7 @@ CHANGED, respectively.
 	));
 }
 
-/// Reset.
+/// # Reset.
 fn reset() -> Result<(), ArgyleError> {
 	let entries = std::fs::read_dir(tmp_dir()?)
 		.map_err(|_| ArgyleError::Custom("Unable to reset cache."))?;
@@ -288,7 +286,7 @@ fn reset() -> Result<(), ArgyleError> {
 	Ok(())
 }
 
-/// Save/Compare.
+/// # Save/Compare.
 fn save_compare(chk: &[u8; 32], key: &str) -> Result<CheckSameKind, ArgyleError> {
 	use std::io::Write;
 
@@ -317,7 +315,7 @@ fn save_compare(chk: &[u8; 32], key: &str) -> Result<CheckSameKind, ArgyleError>
 	Ok(changed)
 }
 
-/// Get/Make Temporary Directory.
+/// # Get/Make Temporary Directory.
 fn tmp_dir() -> Result<PathBuf, ArgyleError> {
 	let mut dir = std::env::temp_dir();
 	dir.push("checksame");
