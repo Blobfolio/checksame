@@ -102,7 +102,7 @@ rustflags   := "-C link-arg=-s"
 # Build Docs.
 @doc:
 	# Make sure nightly is installed; this version generates better docs.
-	rustup install nightly
+	env RUSTUP_PERMIT_COPY_RENAME=true rustup install nightly
 
 	# Make the docs.
 	cargo +nightly doc \
@@ -164,12 +164,8 @@ version:
 # Init dependencies.
 @_init:
 	# We need beta until 1.51 is stable.
-	rustup default beta
-	rustup component add clippy
-
-	[ ! -f "{{ justfile_directory() }}/Cargo.lock" ] || rm "{{ justfile_directory() }}/Cargo.lock"
-	cargo update -w
-	cargo outdated -w
+	env RUSTUP_PERMIT_COPY_RENAME=true rustup default beta
+	env RUSTUP_PERMIT_COPY_RENAME=true rustup component add clippy
 
 
 # Fix file/directory permissions.
