@@ -17,7 +17,7 @@
 
 pkg_id      := "checksame"
 pkg_name    := "CheckSame"
-pkg_dir1    := justfile_directory() + "/checksame"
+pkg_dir1    := justfile_directory() + "/src"
 
 cargo_dir   := "/tmp/" + pkg_id + "-cargo"
 cargo_bin   := cargo_dir + "/x86_64-unknown-linux-gnu/release/" + pkg_id
@@ -41,7 +41,7 @@ rustflags   := "-C link-arg=-s"
 # Build Debian package!
 @build-deb: credits build
 	# Do completions/man.
-	cargo bashman -m "{{ pkg_dir1 }}/Cargo.toml"
+	cargo bashman -m "{{ justfile_directory() }}/Cargo.toml"
 
 	# cargo-deb doesn't support target_dir flags yet.
 	[ ! -d "{{ justfile_directory() }}/target" ] || rm -rf "{{ justfile_directory() }}/target"
@@ -61,7 +61,6 @@ rustflags   := "-C link-arg=-s"
 @check:
 	# First let's build the Rust bit.
 	RUSTFLAGS="{{ rustflags }}" cargo check \
-		--workspace \
 		--release \
 		--target x86_64-unknown-linux-gnu \
 		--target-dir "{{ cargo_dir }}"
@@ -76,14 +75,13 @@ rustflags   := "-C link-arg=-s"
 	[ ! -d "{{ justfile_directory() }}/target" ] || rm -rf "{{ justfile_directory() }}/target"
 	[ ! -d "{{ pkg_dir1 }}/target" ] || rm -rf "{{ pkg_dir1 }}/target"
 
-	cargo update --workspace
+	cargo update -w
 
 
 # Clippy.
 @clippy:
 	clear
 	RUSTFLAGS="{{ rustflags }}" cargo clippy \
-		--workspace \
 		--release \
 		--all-features \
 		--target x86_64-unknown-linux-gnu \
@@ -94,7 +92,7 @@ rustflags   := "-C link-arg=-s"
 @credits:
 	# Update CREDITS.html.
 	cargo about \
-		-m "{{ pkg_dir1 }}/Cargo.toml" \
+		-m "{{ justfile_directory() }}/Cargo.toml" \
 		generate \
 		"{{ release_dir }}/credits/about.hbs" > "{{ justfile_directory() }}/CREDITS.md"
 
@@ -103,12 +101,8 @@ rustflags   := "-C link-arg=-s"
 
 # Build Docs.
 @doc:
-	# Make sure nightly is installed; this version generates better docs.
-	rustup install nightly
-
 	# Make the docs.
-	cargo +nightly doc \
-		--workspace \
+	cargo doc \
 		--release \
 		--no-deps \
 		--target x86_64-unknown-linux-gnu \
@@ -137,7 +131,7 @@ version:
 	#!/usr/bin/env bash
 
 	# Current version.
-	_ver1="$( toml get "{{ pkg_dir1 }}/Cargo.toml" package.version | \
+	_ver1="$( toml get "{{ justfile_directory() }}/Cargo.toml" package.version | \
 		sed 's/"//g' )"
 
 	# Find out if we want to bump it.
@@ -151,7 +145,7 @@ version:
 	fyi success "Setting version to $_ver2."
 
 	# Set the release version!
-	just _version "{{ pkg_dir1 }}" "$_ver2"
+	just _version "{{ justfile_directory() }}" "$_ver2"
 
 
 # Set version for real.
@@ -166,9 +160,9 @@ version:
 
 # Init dependencies.
 @_init:
-	[ ! -f "{{ justfile_directory() }}/Cargo.lock" ] || rm "{{ justfile_directory() }}/Cargo.lock"
-	cargo update --workspace
-	cargo outdated -w
+	# We need beta until 1.51 is stable.
+	# env RUSTUP_PERMIT_COPY_RENAME=true rustup default beta
+	# env RUSTUP_PERMIT_COPY_RENAME=true rustup component add clippy
 
 
 # Fix file/directory permissions.

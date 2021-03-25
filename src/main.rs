@@ -25,7 +25,7 @@ The cache lives in `/tmp/checksame` and can be cleared by running the program wi
 
 This application is written in [Rust](https://www.rust-lang.org/) and can be installed using [Cargo](https://github.com/rust-lang/cargo).
 
-For stable Rust (>= `1.47.0`), run:
+For stable Rust (>= `1.51.0`), run:
 ```bash
 RUSTFLAGS="-C link-arg=-s" cargo install \
     --git https://github.com/Blobfolio/checksame.git \
@@ -82,30 +82,31 @@ checksame -l /path/to/list.txt /path/to/app.js /path/to/folder
 #![warn(unused_extern_crates)]
 #![warn(unused_import_braces)]
 
-#![allow(clippy::cast_possible_truncation)]
-#![allow(clippy::cast_precision_loss)]
-#![allow(clippy::cast_sign_loss)]
-#![allow(clippy::map_err_ignore)]
-#![allow(clippy::missing_errors_doc)]
 #![allow(clippy::module_name_repetitions)]
 
 
 
-use fyi_menu::{
+use argyle::{
 	Argue,
-	ArgueError,
+	ArgyleError,
 	FLAG_HELP,
 	FLAG_REQUIRED,
 	FLAG_VERSION,
 };
+use dowser::{
+	dowse,
+	utility::path_as_bytes,
+};
 use fyi_msg::Msg;
-use fyi_witcher::witch;
 use std::{
 	ffi::OsStr,
 	fmt,
 	io,
 	os::unix::ffi::OsStrExt,
-	path::PathBuf,
+	path::{
+		Path,
+		PathBuf,
+	},
 };
 
 
@@ -119,9 +120,7 @@ enum CheckSameKind {
 
 impl fmt::Display for CheckSameKind {
 	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-		write!(
-			f,
-			"{}",
+		f.write_str(
 			match self {
 				Self::New => "-1",
 				Self::Changed => "1",
@@ -133,25 +132,25 @@ impl fmt::Display for CheckSameKind {
 
 
 
-/// Main.
+/// # Main.
 fn main() {
 	match _main() {
-		Err(ArgueError::WantsVersion) => {
-			fyi_msg::plain!(concat!("CheckSame v", env!("CARGO_PKG_VERSION")));
+		Ok(_) => {},
+		Err(ArgyleError::WantsVersion) => {
+			println!(concat!("CheckSame v", env!("CARGO_PKG_VERSION")));
 		},
-		Err(ArgueError::WantsHelp) => {
+		Err(ArgyleError::WantsHelp) => {
 			helper();
 		},
 		Err(e) => {
 			Msg::error(e).die(1);
 		},
-		Ok(_) => {},
 	}
 }
 
 #[inline]
-/// Actual main.
-fn _main() -> Result<(), ArgueError> {
+/// # Actual main.
+fn _main() -> Result<(), ArgyleError> {
 	// Parse CLI arguments.
 	let args = Argue::new(FLAG_HELP | FLAG_REQUIRED | FLAG_VERSION)?
 		.with_list();
@@ -163,7 +162,7 @@ fn _main() -> Result<(), ArgueError> {
 	let cache = args.switch2(b"-c", b"--cache");
 
 	// Pull the file list.
-	let mut files: Vec<PathBuf> = witch(
+	let mut files: Vec<PathBuf> = dowse(
 		args.args().iter().map(|x| OsStr::from_bytes(x.as_ref()))
 	);
 
@@ -173,7 +172,7 @@ fn _main() -> Result<(), ArgueError> {
 			return Ok(());
 		}
 
-		return Err(ArgueError::Other("At least one valid file path is required."));
+		return Err(ArgyleError::Custom("At least one valid file path is required."));
 	}
 
 	// Sort paths to keep results consistent.
@@ -193,22 +192,19 @@ fn _main() -> Result<(), ArgueError> {
 
 	// Compare the old and new hash, save it, and print the state.
 	if cache {
-		println!(
-			"{}",
-			save_compare(
-				chk.as_bytes(),
-				&files.iter()
-					.fold(
-						blake3::Hasher::new(),
-						|mut h, p| {
-							h.update(fyi_witcher::utility::path_as_bytes(p));
-							h
-						}
-					)
-					.finalize()
-					.to_hex()
-			)?
-		);
+		println!("{}", save_compare(
+			chk.as_bytes(),
+			&files.iter()
+				.fold(
+					blake3::Hasher::new(),
+					|mut h, p| {
+						h.update(path_as_bytes(p));
+						h
+					}
+				)
+				.finalize()
+				.to_hex()
+		)?);
 	}
 	// Just print the hash.
 	else { println!("{}", chk.to_hex()); }
@@ -216,8 +212,8 @@ fn _main() -> Result<(), ArgueError> {
 	Ok(())
 }
 
-/// Hash File.
-fn hash_file(path: &PathBuf) -> Option<[u8; 32]> {
+/// # Hash File.
+fn hash_file(path: &Path) -> Option<[u8; 32]> {
 	let mut file = std::fs::File::open(&path).ok()?;
 	let mut hasher = blake3::Hasher::new();
 	io::copy(&mut file, &mut hasher).ok()?;
@@ -228,7 +224,7 @@ fn hash_file(path: &PathBuf) -> Option<[u8; 32]> {
 #[cold]
 /// Print Help.
 fn helper() {
-	fyi_msg::plain!(concat!(
+	println!(concat!(
 		r"
           ______
       .-'` .    `'-.
@@ -273,10 +269,10 @@ CHANGED, respectively.
 	));
 }
 
-/// Reset.
-fn reset() -> Result<(), ArgueError> {
+/// # Reset.
+fn reset() -> Result<(), ArgyleError> {
 	let entries = std::fs::read_dir(tmp_dir()?)
-		.map_err(|_| ArgueError::Other("Unable to reset cache."))?;
+		.map_err(|_| ArgyleError::Custom("Unable to reset cache."))?;
 
 	entries
 		.filter_map(std::result::Result::ok)
@@ -290,8 +286,8 @@ fn reset() -> Result<(), ArgueError> {
 	Ok(())
 }
 
-/// Save/Compare.
-fn save_compare(chk: &[u8; 32], key: &str) -> Result<CheckSameKind, ArgueError> {
+/// # Save/Compare.
+fn save_compare(chk: &[u8; 32], key: &str) -> Result<CheckSameKind, ArgyleError> {
 	use std::io::Write;
 
 	let mut file = tmp_dir()?;
@@ -314,18 +310,18 @@ fn save_compare(chk: &[u8; 32], key: &str) -> Result<CheckSameKind, ArgueError> 
 			|mut out|
 			out.write_all(chk).and_then(|_| out.flush())
 		)
-		.map_err(|_| ArgueError::Other("Unable to save cache."))?;
+		.map_err(|_| ArgyleError::Custom("Unable to save cache."))?;
 
 	Ok(changed)
 }
 
-/// Get/Make Temporary Directory.
-fn tmp_dir() -> Result<PathBuf, ArgueError> {
+/// # Get/Make Temporary Directory.
+fn tmp_dir() -> Result<PathBuf, ArgyleError> {
 	let mut dir = std::env::temp_dir();
 	dir.push("checksame");
 
 	if ! dir.is_dir() && (dir.exists() || std::fs::create_dir(&dir).is_err()) {
-		Err(ArgueError::Other("Unable to create temporary directory."))
+		Err(ArgyleError::Custom("Unable to create temporary directory."))
 	}
 	else { Ok(dir) }
 }
