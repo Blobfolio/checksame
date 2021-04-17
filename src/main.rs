@@ -101,6 +101,7 @@ use fyi_msg::Msg;
 use std::{
 	ffi::OsStr,
 	fmt,
+	fs::File,
 	io,
 	os::unix::ffi::OsStrExt,
 	path::{
@@ -214,7 +215,7 @@ fn _main() -> Result<(), ArgyleError> {
 
 /// # Hash File.
 fn hash_file(path: &Path) -> Option<[u8; 32]> {
-	let mut file = std::fs::File::open(&path).ok()?;
+	let mut file = File::open(&path).ok()?;
 	let mut hasher = blake3::Hasher::new();
 	io::copy(&mut file, &mut hasher).ok()?;
 	let hash = hasher.finalize();
@@ -305,7 +306,7 @@ fn save_compare(chk: &[u8; 32], key: &str) -> Result<CheckSameKind, ArgyleError>
 	}
 
 	// Save it.
-	std::fs::File::create(&file)
+	File::create(&file)
 		.and_then(
 			|mut out|
 			out.write_all(chk).and_then(|_| out.flush())
