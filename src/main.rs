@@ -101,6 +101,7 @@ use fyi_msg::Msg;
 use std::{
 	ffi::OsStr,
 	fmt,
+	fs::File,
 	io,
 	os::unix::ffi::OsStrExt,
 	path::{
@@ -214,7 +215,7 @@ fn _main() -> Result<(), ArgyleError> {
 
 /// # Hash File.
 fn hash_file(path: &Path) -> Option<[u8; 32]> {
-	let mut file = std::fs::File::open(&path).ok()?;
+	let mut file = File::open(&path).ok()?;
 	let mut hasher = blake3::Hasher::new();
 	io::copy(&mut file, &mut hasher).ok()?;
 	let hash = hasher.finalize();
@@ -294,22 +295,20 @@ fn save_compare(chk: &[u8; 32], key: &str) -> Result<CheckSameKind, ArgyleError>
 	file.push(key);
 
 	// Did it already exist? Compare the new and old values.
-	let mut changed: CheckSameKind = CheckSameKind::New;
-	if file.is_file() {
-		if std::fs::read(&file).unwrap_or_default() == chk {
-			changed = CheckSameKind::Same;
+	let changed =
+		if file.is_file() {
+			// If it is unchanged, we're done!
+			if std::fs::read(&file).unwrap_or_default() == chk {
+				return Ok(CheckSameKind::Same);
+			}
+
+			CheckSameKind::Changed
 		}
-		else {
-			changed = CheckSameKind::Changed;
-		}
-	}
+		else { CheckSameKind::New };
 
 	// Save it.
-	std::fs::File::create(&file)
-		.and_then(
-			|mut out|
-			out.write_all(chk).and_then(|_| out.flush())
-		)
+	File::create(&file)
+		.and_then(|mut out| out.write_all(chk).and_then(|_| out.flush()))
 		.map_err(|_| ArgyleError::Custom("Unable to save cache."))?;
 
 	Ok(changed)
