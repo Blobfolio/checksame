@@ -295,22 +295,20 @@ fn save_compare(chk: &[u8; 32], key: &str) -> Result<CheckSameKind, ArgyleError>
 	file.push(key);
 
 	// Did it already exist? Compare the new and old values.
-	let mut changed: CheckSameKind = CheckSameKind::New;
-	if file.is_file() {
-		if std::fs::read(&file).unwrap_or_default() == chk {
-			changed = CheckSameKind::Same;
+	let changed =
+		if file.is_file() {
+			// If it is unchanged, we're done!
+			if std::fs::read(&file).unwrap_or_default() == chk {
+				return Ok(CheckSameKind::Same);
+			}
+
+			CheckSameKind::Changed
 		}
-		else {
-			changed = CheckSameKind::Changed;
-		}
-	}
+		else { CheckSameKind::New };
 
 	// Save it.
 	File::create(&file)
-		.and_then(
-			|mut out|
-			out.write_all(chk).and_then(|_| out.flush())
-		)
+		.and_then(|mut out| out.write_all(chk).and_then(|_| out.flush()))
 		.map_err(|_| ArgyleError::Custom("Unable to save cache."))?;
 
 	Ok(changed)
