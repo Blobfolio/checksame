@@ -86,6 +86,9 @@ checksame -l /path/to/list.txt /path/to/app.js /path/to/folder
 
 
 
+mod error;
+mod hash;
+
 use argyle::{
 	Argue,
 	ArgyleError,
@@ -93,54 +96,28 @@ use argyle::{
 	FLAG_REQUIRED,
 	FLAG_VERSION,
 };
-use dowser::{
-	dowse,
-	utility::path_as_bytes,
-};
+use error::CheckSameError;
 use fyi_msg::Msg;
+use hash::{
+	CheckSame,
+	FLAG_CACHE,
+	FLAG_RESET,
+};
 use std::{
 	ffi::OsStr,
-	fmt,
-	fs::File,
-	io,
 	os::unix::ffi::OsStrExt,
-	path::{
-		Path,
-		PathBuf,
-	},
 };
-
-
-
-#[derive(Debug, Copy, Clone, Eq, Hash, PartialEq)]
-enum CheckSameKind {
-	New,
-	Changed,
-	Same,
-}
-
-impl fmt::Display for CheckSameKind {
-	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-		f.write_str(
-			match self {
-				Self::New => "-1",
-				Self::Changed => "1",
-				Self::Same => "0",
-			}
-		)
-	}
-}
 
 
 
 /// # Main.
 fn main() {
 	match _main() {
-		Ok(_) => {},
-		Err(ArgyleError::WantsVersion) => {
+		Ok(_) | Err(CheckSameError::Noop) => {},
+		Err(CheckSameError::Argue(ArgyleError::WantsVersion)) => {
 			println!(concat!("CheckSame v", env!("CARGO_PKG_VERSION")));
 		},
-		Err(ArgyleError::WantsHelp) => {
+		Err(CheckSameError::Argue(ArgyleError::WantsHelp)) => {
 			helper();
 		},
 		Err(e) => {
@@ -151,75 +128,31 @@ fn main() {
 
 #[inline]
 /// # Actual main.
-fn _main() -> Result<(), ArgyleError> {
+fn _main() -> Result<(), CheckSameError> {
 	// Parse CLI arguments.
 	let args = Argue::new(FLAG_HELP | FLAG_REQUIRED | FLAG_VERSION)?
 		.with_list();
 
 	// Reset before we begin?
-	if args.switch(b"--reset") { reset()?; }
-
-	// Are we in check mode?
-	let cache = args.switch2(b"-c", b"--cache");
-
-	// Pull the file list.
-	let mut files: Vec<PathBuf> = dowse(
-		args.args().iter().map(|x| OsStr::from_bytes(x.as_ref()))
-	);
-
-	if files.is_empty() {
-		// We don't need to require new files when resetting.
-		if args.switch(b"--reset") {
-			return Ok(());
-		}
-
-		return Err(ArgyleError::Custom("At least one valid file path is required."));
+	let mut flags: u8 = 0;
+	if args.switch(b"--reset") {
+		flags |= FLAG_RESET;
+	}
+	if args.switch2(b"-c", b"--cache") {
+		flags |= FLAG_CACHE;
 	}
 
-	// Sort paths to keep results consistent.
-	files.sort();
+	// Build it.
+	let hash = CheckSame::new(
+		dowser::dowse(args.args().iter().map(|x| OsStr::from_bytes(x.as_ref()))),
+		flags
+	)?;
 
-	// It is faster to hash each file separately and then hash the hashes
-	// rather than feeding the byte content of each file into a single hasher.
-	let chk = files.iter()
-		.fold(
-			blake3::Hasher::new(),
-			|mut h, p| {
-				if let Some(res) = hash_file(p) { h.update(&res); }
-				h
-			}
-		)
-		.finalize();
+	// Print it.
+	println!("{}", hash);
 
-	// Compare the old and new hash, save it, and print the state.
-	if cache {
-		println!("{}", save_compare(
-			chk.as_bytes(),
-			&files.iter()
-				.fold(
-					blake3::Hasher::new(),
-					|mut h, p| {
-						h.update(path_as_bytes(p));
-						h
-					}
-				)
-				.finalize()
-				.to_hex()
-		)?);
-	}
-	// Just print the hash.
-	else { println!("{}", chk.to_hex()); }
-
+	// Done!
 	Ok(())
-}
-
-/// # Hash File.
-fn hash_file(path: &Path) -> Option<[u8; 32]> {
-	let mut file = File::open(&path).ok()?;
-	let mut hasher = blake3::Hasher::new();
-	io::copy(&mut file, &mut hasher).ok()?;
-	let hash = hasher.finalize();
-	Some(*hash.as_bytes())
 }
 
 #[cold]
@@ -268,59 +201,4 @@ A value of -1, 0, or 1 will be printed instead, indicating NEW, UNCHANGED, or
 CHANGED, respectively.
 ",
 	));
-}
-
-/// # Reset.
-fn reset() -> Result<(), ArgyleError> {
-	let entries = std::fs::read_dir(tmp_dir()?)
-		.map_err(|_| ArgyleError::Custom("Unable to reset cache."))?;
-
-	entries
-		.filter_map(std::result::Result::ok)
-		.for_each(|x| {
-			let path = x.path();
-			if path.is_file() {
-				let _ = std::fs::remove_file(path);
-			}
-		});
-
-	Ok(())
-}
-
-/// # Save/Compare.
-fn save_compare(chk: &[u8; 32], key: &str) -> Result<CheckSameKind, ArgyleError> {
-	use std::io::Write;
-
-	let mut file = tmp_dir()?;
-	file.push(key);
-
-	// Did it already exist? Compare the new and old values.
-	let changed =
-		if file.is_file() {
-			// If it is unchanged, we're done!
-			if std::fs::read(&file).unwrap_or_default() == chk {
-				return Ok(CheckSameKind::Same);
-			}
-
-			CheckSameKind::Changed
-		}
-		else { CheckSameKind::New };
-
-	// Save it.
-	File::create(&file)
-		.and_then(|mut out| out.write_all(chk).and_then(|_| out.flush()))
-		.map_err(|_| ArgyleError::Custom("Unable to save cache."))?;
-
-	Ok(changed)
-}
-
-/// # Get/Make Temporary Directory.
-fn tmp_dir() -> Result<PathBuf, ArgyleError> {
-	let mut dir = std::env::temp_dir();
-	dir.push("checksame");
-
-	if ! dir.is_dir() && (dir.exists() || std::fs::create_dir(&dir).is_err()) {
-		Err(ArgyleError::Custom("Unable to create temporary directory."))
-	}
-	else { Ok(dir) }
 }
