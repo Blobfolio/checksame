@@ -7,7 +7,13 @@ use blake3::{
 	Hash,
 	Hasher,
 };
-use rayon::slice::ParallelSliceMut;
+use rayon::{
+	iter::{
+		IntoParallelIterator,
+		ParallelIterator,
+	},
+	slice::ParallelSliceMut,
+};
 use std::{
 	fmt,
 	fs::File,
@@ -98,29 +104,28 @@ impl fmt::Display for CheckSame {
 
 impl From<Vec<PathBuf>> for CheckSame {
 	fn from(paths: Vec<PathBuf>) -> Self {
-		// We need three different hashers: one (to reuse) for each
-		// individual; one to build a cache key for the set; and one to
-		// hold the cumulative hash of all files in the set.
+		// First pass, hash all the files, consuming the original vector.
+		let mut raw: Vec<(PathBuf, Option<[u8; 32]>)> = paths.into_par_iter()
+			.map(|p| {
+				let hash = hash_file(&p);
+				(p, hash)
+			})
+			.collect();
+
+		// Resort by path for consistency.
+		raw.par_sort_by(|(a, _), (b, _)| a.cmp(b));
+
+		// Second pass, build the cumulative file/key hashes.
 		let mut all_h = Hasher::new();
 		let mut key_h = Hasher::new();
-		let mut one_h = Hasher::new();
-
-		// Consume the path list and build the hashes.
-		paths.into_iter().for_each(|path| {
-			// Update the key hash.
-			key_h.update(path.as_os_str().as_bytes());
-
-			// Build a hash for the single file. If we can't read it, it
-			// doesn't contribute.
-			if let Ok(mut file) = File::open(path) {
-				one_h.reset();
-				if std::io::copy(&mut file, &mut one_h).is_ok() {
-					// Add the file hash to our cumulative hash.
-					all_h.update(one_h.finalize().as_bytes());
-				}
+		raw.into_iter().for_each(|(p, h)| {
+			key_h.update(p.as_os_str().as_bytes());
+			if let Some(hash) = h.as_ref() {
+				all_h.update(hash);
 			}
 		});
 
+		// We're done!
 		Self {
 			key: key_h.finalize(),
 			hash: all_h.finalize(),
@@ -147,7 +152,7 @@ impl CheckSame {
 	///
 	/// This will return an error if the path list is empty or any reset/cache
 	/// operations fail for any reason.
-	pub(crate) fn new(mut paths: Vec<PathBuf>, flags: u8) -> Result<Self, CheckSameError> {
+	pub(crate) fn new(paths: Vec<PathBuf>, flags: u8) -> Result<Self, CheckSameError> {
 		// If there are no paths, there's (probably) nothing for us to do.
 		if paths.is_empty() {
 			// We need to reset any other random caches before leaving.
@@ -161,9 +166,6 @@ impl CheckSame {
 			// Otherwise shame!
 			return Err(CheckSameError::NoFiles);
 		}
-
-		// Sort the paths so we can have a consistent cumulative hash.
-		paths.par_sort();
 
 		// Consume and build.
 		let mut out = Self::from(paths);
@@ -230,6 +232,17 @@ impl CheckSame {
 }
 
 
+
+/// # Hash File.
+///
+/// Hash the contents of a file path if possible, returning the hash bytes on
+/// success.
+fn hash_file(path: &Path) -> Option<[u8; 32]> {
+	let mut file = File::open(path).ok()?;
+	let mut hasher = Hasher::new();
+	std::io::copy(&mut file, &mut hasher).ok()?;
+	Some(*(hasher.finalize().as_bytes()))
+}
 
 /// # Reset Cache.
 ///
