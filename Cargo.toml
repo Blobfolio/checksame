@@ -83,11 +83,8 @@ lines = [
 argyle = "0.4.*"
 blake3 = "0.3.*"
 dowser = "0.2.*"
+fyi_msg = "0.8.*"
 rayon = "1.5.*"
-
-[dependencies.fyi_msg]
-git = "https://github.com/Blobfolio/fyi.git"
-tag = "v0.7.1"
 
 [profile.release]
 lto = true
