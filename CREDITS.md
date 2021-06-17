@@ -18,23 +18,22 @@ License details for project dependencies are listed below.
 
 **Used By:**
 
-* [ahash 0.7.2](https://github.com/tkaitchuck/ahash)
+* [ahash 0.7.4](https://github.com/tkaitchuck/ahash)
 * [arrayvec 0.5.2](https://github.com/bluss/arrayvec)
 * [cfg-if 0.1.10](https://github.com/alexcrichton/cfg-if)
 * [cfg-if 1.0.0](https://github.com/alexcrichton/cfg-if)
 * [crossbeam-channel 0.5.1](https://github.com/crossbeam-rs/crossbeam)
 * [crossbeam-deque 0.8.0](https://github.com/crossbeam-rs/crossbeam)
-* [crossbeam-epoch 0.9.4](https://github.com/crossbeam-rs/crossbeam)
-* [crossbeam-utils 0.8.4](https://github.com/crossbeam-rs/crossbeam)
+* [crossbeam-epoch 0.9.5](https://github.com/crossbeam-rs/crossbeam)
+* [crossbeam-utils 0.8.5](https://github.com/crossbeam-rs/crossbeam)
 * [either 1.6.1](https://github.com/bluss/either)
 * [lazy_static 1.4.0](https://github.com/rust-lang-nursery/lazy-static.rs)
-* [libc 0.2.94](https://github.com/rust-lang/libc)
-* [num-integer 0.1.44](https://github.com/rust-num/num-integer)
+* [libc 0.2.97](https://github.com/rust-lang/libc)
 * [num-traits 0.2.14](https://github.com/rust-num/num-traits)
 * [num_cpus 1.13.0](https://github.com/seanmonstar/num_cpus)
-* [once_cell 1.7.2](https://github.com/matklad/once_cell)
-* [rayon 1.5.0](https://github.com/rayon-rs/rayon)
-* [rayon-core 1.9.0](https://github.com/rayon-rs/rayon)
+* [once_cell 1.8.0](https://github.com/matklad/once_cell)
+* [rayon 1.5.1](https://github.com/rayon-rs/rayon)
+* [rayon-core 1.9.1](https://github.com/rayon-rs/rayon)
 * [scopeguard 1.1.0](https://github.com/bluss/scopeguard)
 
 
@@ -247,7 +246,7 @@ limitations under the License.
 
 **Used By:**
 
-* [blake3 0.3.7](https://github.com/BLAKE3-team/BLAKE3)
+* [blake3 0.3.8](https://github.com/BLAKE3-team/BLAKE3)
 
 
 ```
@@ -544,7 +543,7 @@ limitations under the License.
 
 **Used By:**
 
-* [getrandom 0.2.2](https://github.com/rust-random/getrandom)
+* [getrandom 0.2.3](https://github.com/rust-random/getrandom)
 
 
 ```
@@ -1206,7 +1205,7 @@ SOFTWARE.
 
 **Used By:**
 
-* [memoffset 0.6.3](https://github.com/Gilnaa/memoffset)
+* [memoffset 0.6.4](https://github.com/Gilnaa/memoffset)
 
 
 ```
@@ -1235,11 +1234,11 @@ SOFTWARE.
 
 **Used By:**
 
-* [argyle 0.4.1](https://github.com/Blobfolio/argyle)
-* [checksame 0.2.2](https://github.com/Blobfolio/checksame)
-* [dactyl 0.1.7](https://github.com/Blobfolio/dactyl)
-* [dowser 0.2.3](https://github.com/Blobfolio/dowser)
-* [fyi_msg 0.7.1](https://github.com/Blobfolio/fyi)
+* [argyle 0.4.2](https://github.com/Blobfolio/argyle)
+* [checksame 0.2.3](https://github.com/Blobfolio/checksame)
+* [dactyl 0.1.8](https://github.com/Blobfolio/dactyl)
+* [dowser 0.2.4](https://github.com/Blobfolio/dowser)
+* [fyi_msg 0.8.1](https://github.com/Blobfolio/fyi)
 
 
 ```
