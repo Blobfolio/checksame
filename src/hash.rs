@@ -118,12 +118,12 @@ impl From<Vec<PathBuf>> for CheckSame {
 		// Second pass, build the cumulative file/key hashes.
 		let mut all_h = Hasher::new();
 		let mut key_h = Hasher::new();
-		raw.into_iter().for_each(|(p, h)| {
+		for (p, h) in raw {
 			key_h.update(p.as_os_str().as_bytes());
 			if let Some(hash) = h.as_ref() {
 				all_h.update(hash);
 			}
-		});
+		}
 
 		// We're done!
 		Self {
