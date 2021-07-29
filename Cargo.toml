@@ -1,6 +1,6 @@
 [package]
 name = "checksame"
-version = "0.2.3"
+version = "0.2.4"
 license = "WTFPL"
 authors = ["Josh Stoik <josh@blobfolio.com>"]
 edition = "2018"
@@ -81,7 +81,7 @@ lines = [
 
 [dependencies]
 argyle = "0.4.*"
-blake3 = "0.3.*"
+blake3 = "1.0.*"
 dowser = "0.2.*"
 fyi_msg = "0.8.*"
 rayon = "1.5.*"

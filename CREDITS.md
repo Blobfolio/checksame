@@ -7,7 +7,6 @@ License details for project dependencies are listed below.
 * Apache License 2.0 (5)
 * MIT License (2)
 * BSD 2-Clause &quot;Simplified&quot; License (1)
-* BSD 3-Clause &quot;New&quot; or &quot;Revised&quot; License (1)
 * Creative Commons Zero v1.0 Universal (1)
 * Do What The F*ck You Want To Public License (1)
 
@@ -19,8 +18,7 @@ License details for project dependencies are listed below.
 **Used By:**
 
 * [ahash 0.7.4](https://github.com/tkaitchuck/ahash)
-* [arrayvec 0.5.2](https://github.com/bluss/arrayvec)
-* [cfg-if 0.1.10](https://github.com/alexcrichton/cfg-if)
+* [arrayvec 0.7.1](https://github.com/bluss/arrayvec)
 * [cfg-if 1.0.0](https://github.com/alexcrichton/cfg-if)
 * [crossbeam-channel 0.5.1](https://github.com/crossbeam-rs/crossbeam)
 * [crossbeam-deque 0.8.0](https://github.com/crossbeam-rs/crossbeam)
@@ -28,7 +26,7 @@ License details for project dependencies are listed below.
 * [crossbeam-utils 0.8.5](https://github.com/crossbeam-rs/crossbeam)
 * [either 1.6.1](https://github.com/bluss/either)
 * [lazy_static 1.4.0](https://github.com/rust-lang-nursery/lazy-static.rs)
-* [libc 0.2.97](https://github.com/rust-lang/libc)
+* [libc 0.2.98](https://github.com/rust-lang/libc)
 * [num-traits 0.2.14](https://github.com/rust-num/num-traits)
 * [num_cpus 1.13.0](https://github.com/seanmonstar/num_cpus)
 * [once_cell 1.8.0](https://github.com/matklad/once_cell)
@@ -246,7 +244,7 @@ limitations under the License.
 
 **Used By:**
 
-* [blake3 0.3.8](https://github.com/BLAKE3-team/BLAKE3)
+* [blake3 1.0.0](https://github.com/BLAKE3-team/BLAKE3)
 
 
 ```
@@ -330,7 +328,6 @@ limitations under the License.
 
 **Used By:**
 
-* [crypto-mac 0.8.0](https://github.com/RustCrypto/traits)
 * [digest 0.9.0](https://github.com/RustCrypto/traits)
 
 
@@ -999,45 +996,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ```
 
-### BSD 3-Clause &quot;New&quot; or &quot;Revised&quot; License
-
-**Used By:**
-
-* [subtle 2.4.0](https://github.com/dalek-cryptography/subtle)
-
-
-```
-Copyright (c) 2016-2017 Isis Agora Lovecruft, Henry de Valence. All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are
-met:
-
-1. Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-
-2. Redistributions in binary form must reproduce the above copyright
-notice, this list of conditions and the following disclaimer in the
-documentation and/or other materials provided with the distribution.
-
-3. Neither the name of the copyright holder nor the names of its
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
-IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
-TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
-TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-
-```
-
 ### Creative Commons Zero v1.0 Universal
 
 **Used By:**
@@ -1235,7 +1193,7 @@ SOFTWARE.
 **Used By:**
 
 * [argyle 0.4.2](https://github.com/Blobfolio/argyle)
-* [checksame 0.2.3](https://github.com/Blobfolio/checksame)
+* [checksame 0.2.4](https://github.com/Blobfolio/checksame)
 * [dactyl 0.1.8](https://github.com/Blobfolio/dactyl)
 * [dowser 0.2.4](https://github.com/Blobfolio/dowser)
 * [fyi_msg 0.8.1](https://github.com/Blobfolio/fyi)
