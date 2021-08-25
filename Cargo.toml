@@ -28,7 +28,7 @@ By default, this hash is simply printed to STDOUT.\n\
 .\n\
 However, when run with `-c` or `--cache`, the resulting hash will be stored and compared against the previous run."""
 revision = "1"
-depends = "$auto"
+depends = "libc6 (>= 2.18), libgcc1 (>= 1:4.2) | libgcc-s1 (>= 4.2)"
 section = "utility"
 assets = [
     ["./target/x86_64-unknown-linux-gnu/release/checksame", "usr/bin/", "755"],
