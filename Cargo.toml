@@ -1,9 +1,10 @@
 [package]
 name = "checksame"
-version = "0.2.4"
+version = "0.2.5"
 license = "WTFPL"
 authors = ["Josh Stoik <josh@blobfolio.com>"]
-edition = "2018"
+edition = "2021"
+rust-version = "1.56"
 description = "CheckSame generates a single Blake3 hash from any number of files or directories."
 repository = "https://github.com/Blobfolio/checksame"
 readme = "README.md"
@@ -28,7 +29,7 @@ By default, this hash is simply printed to STDOUT.\n\
 .\n\
 However, when run with `-c` or `--cache`, the resulting hash will be stored and compared against the previous run."""
 revision = "1"
-depends = "$auto"
+depends = "libc6 (>= 2.18), libgcc-s1 (>= 4.2)"
 section = "utility"
 assets = [
     ["./target/x86_64-unknown-linux-gnu/release/checksame", "usr/bin/", "755"],
@@ -80,10 +81,10 @@ lines = [
 ]
 
 [dependencies]
-argyle = "0.4.*"
+argyle = "0.5.*"
 blake3 = "1.0.*"
-dowser = "0.2.*"
-fyi_msg = "0.8.*"
+dowser = "0.3.*"
+fyi_msg = "0.9.*"
 rayon = "1.5.*"
 
 [profile.release]
