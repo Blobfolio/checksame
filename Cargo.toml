@@ -81,10 +81,10 @@ lines = [
 ]
 
 [dependencies]
-argyle = "0.4.*"
+argyle = "0.5.*"
 blake3 = "1.0.*"
-dowser = "0.2.*"
-fyi_msg = "0.8.*"
+dowser = "0.3.*"
+fyi_msg = "0.9.*"
 rayon = "1.5.*"
 
 [profile.release]
