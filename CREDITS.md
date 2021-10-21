@@ -17,7 +17,7 @@ License details for project dependencies are listed below.
 
 **Used By:**
 
-* [ahash 0.7.4](https://github.com/tkaitchuck/ahash)
+* [ahash 0.7.6](https://github.com/tkaitchuck/ahash)
 * [arrayvec 0.7.1](https://github.com/bluss/arrayvec)
 * [cfg-if 1.0.0](https://github.com/alexcrichton/cfg-if)
 * [crossbeam-channel 0.5.1](https://github.com/crossbeam-rs/crossbeam)
@@ -26,7 +26,7 @@ License details for project dependencies are listed below.
 * [crossbeam-utils 0.8.5](https://github.com/crossbeam-rs/crossbeam)
 * [either 1.6.1](https://github.com/bluss/either)
 * [lazy_static 1.4.0](https://github.com/rust-lang-nursery/lazy-static.rs)
-* [libc 0.2.98](https://github.com/rust-lang/libc)
+* [libc 0.2.104](https://github.com/rust-lang/libc)
 * [num-traits 0.2.14](https://github.com/rust-num/num-traits)
 * [num_cpus 1.13.0](https://github.com/seanmonstar/num_cpus)
 * [once_cell 1.8.0](https://github.com/matklad/once_cell)
@@ -752,7 +752,7 @@ limitations under the License.
 
 **Used By:**
 
-* [typenum 1.13.0](https://github.com/paholg/typenum)
+* [typenum 1.14.0](https://github.com/paholg/typenum)
 
 
 ```
@@ -1192,11 +1192,11 @@ SOFTWARE.
 
 **Used By:**
 
-* [argyle 0.4.2](https://github.com/Blobfolio/argyle)
-* [checksame 0.2.4](https://github.com/Blobfolio/checksame)
-* [dactyl 0.1.8](https://github.com/Blobfolio/dactyl)
-* [dowser 0.2.4](https://github.com/Blobfolio/dowser)
-* [fyi_msg 0.8.1](https://github.com/Blobfolio/fyi)
+* [argyle 0.5.0](https://github.com/Blobfolio/argyle)
+* [checksame 0.2.5](https://github.com/Blobfolio/checksame)
+* [dactyl 0.2.0](https://github.com/Blobfolio/dactyl)
+* [dowser 0.3.0](https://github.com/Blobfolio/dowser)
+* [fyi_msg 0.9.0](https://github.com/Blobfolio/fyi)
 
 
 ```
