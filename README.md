@@ -1,6 +1,7 @@
 # CheckSame
 
 [![Build Status](https://github.com/Blobfolio/checksame/workflows/Build/badge.svg)](https://github.com/Blobfolio/checksame/actions)
+[![Dependency Status](https://deps.rs/repo/github/blobfolio/checksame/status.svg)](https://deps.rs/repo/github/blobfolio/checksame)
 
 CheckSame is a recursive, cumulative [Blake3](https://en.wikipedia.org/wiki/BLAKE_(hash_function)#BLAKE3) file hasher for x86-64 Linux machines.
 
