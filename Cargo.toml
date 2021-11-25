@@ -82,7 +82,7 @@ lines = [
 
 [dependencies]
 argyle = "0.5.*"
-blake3 = "1.1.*"
+blake3 = "1.2.*"
 dowser = "0.3.*"
 fyi_msg = "0.9.*"
 rayon = "1.5.*"
