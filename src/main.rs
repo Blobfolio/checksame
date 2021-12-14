@@ -62,6 +62,8 @@ checksame -l /path/to/list.txt /path/to/app.js /path/to/folder
 ```
 */
 
+#![forbid(unsafe_code)]
+
 #![warn(clippy::filetype_is_file)]
 #![warn(clippy::integer_division)]
 #![warn(clippy::needless_borrow)]
@@ -96,6 +98,7 @@ use argyle::{
 	FLAG_REQUIRED,
 	FLAG_VERSION,
 };
+use dowser::Dowser;
 use error::CheckSameError;
 use fyi_msg::Msg;
 use hash::{
@@ -106,6 +109,7 @@ use hash::{
 use std::{
 	ffi::OsStr,
 	os::unix::ffi::OsStrExt,
+	path::PathBuf,
 };
 
 
@@ -144,7 +148,10 @@ fn _main() -> Result<(), CheckSameError> {
 
 	// Build it.
 	let hash = CheckSame::new(
-		dowser::dowse(args.args().iter().map(|x| OsStr::from_bytes(x.as_ref()))),
+		Vec::<PathBuf>::try_from(
+			Dowser::default()
+				.with_paths(args.args().iter().map(|x| OsStr::from_bytes(x.as_ref())))
+		).unwrap_or_default(),
 		flags
 	)?;
 
