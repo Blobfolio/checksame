@@ -109,7 +109,6 @@ use hash::{
 use std::{
 	ffi::OsStr,
 	os::unix::ffi::OsStrExt,
-	path::PathBuf,
 };
 
 
@@ -148,10 +147,9 @@ fn _main() -> Result<(), CheckSameError> {
 
 	// Build it.
 	let hash = CheckSame::new(
-		Vec::<PathBuf>::try_from(
-			Dowser::default()
-				.with_paths(args.args().iter().map(|x| OsStr::from_bytes(x.as_ref())))
-		).unwrap_or_default(),
+		Dowser::default()
+			.with_paths(args.args().iter().map(|x| OsStr::from_bytes(x.as_ref())))
+			.into_vec(),
 		flags
 	)?;
 
