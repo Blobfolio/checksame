@@ -277,10 +277,8 @@ fn reset(cache_dir: &Path) -> Result<(), CheckSameError> {
 /// This will return an error if the directory path is blocked or cannot be
 /// created.
 fn tmp_dir() -> Result<PathBuf, CheckSameError> {
-	let mut dir = std::env::temp_dir();
-	dir.push("checksame");
-
 	// The directory has to exist.
+	let dir = std::env::temp_dir().join("checksame");
 	if ! dir.is_dir() && (dir.exists() || std::fs::create_dir(&dir).is_err()) {
 		Err(CheckSameError::Tmp)
 	}
