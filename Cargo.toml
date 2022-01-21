@@ -20,7 +20,7 @@ exclude = [
 
 [package.metadata.deb]
 maintainer = "Josh Stoik <hello@blobfolio.com>"
-copyright = "2021, Blobfolio, LLC <hello@blobfolio.com>"
+copyright = "2022, Blobfolio, LLC <hello@blobfolio.com>"
 license-file = ["./LICENSE", "0"]
 extended-description = """\n\
 CheckSame is a recursive, cumulative Blake3 file hasher for x86-64 Linux machines.\n\
