@@ -1,11 +1,11 @@
 [package]
 name = "checksame"
-version = "0.2.8"
+version = "0.2.9"
 license = "WTFPL"
 authors = ["Josh Stoik <josh@blobfolio.com>"]
 edition = "2021"
 rust-version = "1.56"
-description = "CheckSame generates a single Blake3 hash from any number of files or directories."
+description = "Generate single Blake3 hashes from any number of files or directories."
 repository = "https://github.com/Blobfolio/checksame"
 readme = "README.md"
 publish = false
@@ -20,7 +20,7 @@ exclude = [
 
 [package.metadata.deb]
 maintainer = "Josh Stoik <hello@blobfolio.com>"
-copyright = "2021, Blobfolio, LLC <hello@blobfolio.com>"
+copyright = "2022, Blobfolio, LLC <hello@blobfolio.com>"
 license-file = ["./LICENSE", "0"]
 extended-description = """\n\
 CheckSame is a recursive, cumulative Blake3 file hasher for x86-64 Linux machines.\n\
@@ -30,7 +30,7 @@ By default, this hash is simply printed to STDOUT.\n\
 However, when run with `-c` or `--cache`, the resulting hash will be stored and compared against the previous run."""
 revision = "1"
 depends = "$auto"
-section = "utility"
+section = "utils"
 assets = [
     ["./target/x86_64-unknown-linux-gnu/release/checksame", "usr/bin/", "755"],
     ["./release/completions/checksame.bash", "etc/bash_completion.d/", "644"],
