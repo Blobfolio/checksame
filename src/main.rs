@@ -149,7 +149,7 @@ fn _main() -> Result<(), CheckSameError> {
 	let hash = CheckSame::new(
 		Dowser::default()
 			.with_paths(args.args().iter().map(|x| OsStr::from_bytes(x.as_ref())))
-			.into_vec(),
+			.collect(),
 		flags
 	)?;
 
