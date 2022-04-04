@@ -241,7 +241,7 @@ fn hash_file(path: &Path) -> Option<[u8; 32]> {
 	let mut file = File::open(path).ok()?;
 	let mut hasher = Hasher::new();
 	std::io::copy(&mut file, &mut hasher).ok()?;
-	Some(*(hasher.finalize().as_bytes()))
+	Some(<[u8; 32]>::from(hasher.finalize()))
 }
 
 /// # Reset Cache.
