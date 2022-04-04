@@ -17,7 +17,6 @@ use rayon::{
 use std::{
 	fmt,
 	fs::File,
-	os::unix::ffi::OsStrExt,
 	path::{
 		Path,
 		PathBuf,
@@ -105,10 +104,10 @@ impl fmt::Display for CheckSame {
 impl From<Vec<PathBuf>> for CheckSame {
 	fn from(paths: Vec<PathBuf>) -> Self {
 		// First pass, hash all the files, consuming the original vector.
-		let mut raw: Vec<(PathBuf, Option<[u8; 32]>)> = paths.into_par_iter()
+		let mut raw: Vec<(String, Option<[u8; 32]>)> = paths.into_par_iter()
 			.map(|p| {
 				let hash = hash_file(&p);
-				(p, hash)
+				(p.to_string_lossy().into_owned(), hash)
 			})
 			.collect();
 
@@ -119,7 +118,7 @@ impl From<Vec<PathBuf>> for CheckSame {
 		let mut all_h = Hasher::new();
 		let mut key_h = Hasher::new();
 		for (p, h) in raw {
-			key_h.update(p.as_os_str().as_bytes());
+			key_h.update(p.as_bytes());
 			if let Some(hash) = h.as_ref() {
 				all_h.update(hash);
 			}
