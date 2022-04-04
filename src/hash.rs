@@ -2,10 +2,10 @@
 # `CheckSame` - Hasher
 */
 
-use super::CheckSameError;
+use ahash::AHasher;
 use blake3::{
 	Hash,
-	Hasher,
+	Hasher as BHasher,
 };
 use rayon::{
 	iter::{
@@ -17,11 +17,13 @@ use rayon::{
 use std::{
 	fmt,
 	fs::File,
+	hash::Hasher,
 	path::{
 		Path,
 		PathBuf,
 	},
 };
+use super::CheckSameError;
 
 
 
@@ -71,7 +73,7 @@ pub(super) struct CheckSame {
 	///
 	/// This hash is used to calculate a unique file path for the set. It is
 	/// calculated by hashing all of the file paths in order.
-	key: Hash,
+	key: u64,
 
 	/// # Hash.
 	///
@@ -115,10 +117,10 @@ impl From<Vec<PathBuf>> for CheckSame {
 		raw.par_sort_by(|(a, _), (b, _)| a.cmp(b));
 
 		// Second pass, build the cumulative file/key hashes.
-		let mut all_h = Hasher::new();
-		let mut key_h = Hasher::new();
+		let mut key_h = AHasher::new_with_keys(1319, 2371);
+		let mut all_h = BHasher::new();
 		for (p, h) in raw {
-			key_h.update(p.as_bytes());
+			key_h.write(p.as_bytes());
 			if let Some(hash) = h.as_ref() {
 				all_h.update(hash);
 			}
@@ -126,7 +128,7 @@ impl From<Vec<PathBuf>> for CheckSame {
 
 		// We're done!
 		Self {
-			key: key_h.finalize(),
+			key: key_h.finish(),
 			hash: all_h.finalize(),
 			status: CheckedSame::Noop,
 		}
@@ -202,8 +204,7 @@ impl CheckSame {
 		use std::io::Write;
 
 		// Generate a file path for the cache.
-		let key: &str = &self.key.to_hex();
-		path.push(key);
+		path.push(self.key.to_string());
 
 		// Get the hash as bytes.
 		let bytes: &[u8] = self.hash.as_bytes();
@@ -238,7 +239,7 @@ impl CheckSame {
 /// success.
 fn hash_file(path: &Path) -> Option<[u8; 32]> {
 	let mut file = File::open(path).ok()?;
-	let mut hasher = Hasher::new();
+	let mut hasher = BHasher::new();
 	std::io::copy(&mut file, &mut hasher).ok()?;
 	Some(<[u8; 32]>::from(hasher.finalize()))
 }
