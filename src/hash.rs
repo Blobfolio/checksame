@@ -106,7 +106,7 @@ impl fmt::Display for CheckSame {
 impl From<Vec<PathBuf>> for CheckSame {
 	fn from(paths: Vec<PathBuf>) -> Self {
 		// First pass, hash all the files, consuming the original vector.
-		let mut raw: Vec<(String, Option<[u8; 32]>)> = paths.into_par_iter()
+		let mut raw: Vec<(String, [u8; 32])> = paths.into_par_iter()
 			.map(|p| {
 				let hash = hash_file(&p);
 				(p.to_string_lossy().into_owned(), hash)
@@ -121,9 +121,7 @@ impl From<Vec<PathBuf>> for CheckSame {
 		let mut all_h = BHasher::new();
 		for (p, h) in raw {
 			key_h.write(p.as_bytes());
-			if let Some(hash) = h.as_ref() {
-				all_h.update(hash);
-			}
+			all_h.update(&h);
 		}
 
 		// We're done!
@@ -237,11 +235,16 @@ impl CheckSame {
 ///
 /// Hash the contents of a file path if possible, returning the hash bytes on
 /// success.
-fn hash_file(path: &Path) -> Option<[u8; 32]> {
-	let mut file = File::open(path).ok()?;
-	let mut hasher = BHasher::new();
-	std::io::copy(&mut file, &mut hasher).ok()?;
-	Some(<[u8; 32]>::from(hasher.finalize()))
+fn hash_file(path: &Path) -> [u8; 32] {
+	if let Ok(mut file) = File::open(path) {
+		let mut hasher = BHasher::new();
+		if std::io::copy(&mut file, &mut hasher).is_ok() {
+			return <[u8; 32]>::from(hasher.finalize());
+		}
+	}
+
+	// Default to zeroes.
+	[b'0'; 32]
 }
 
 /// # Reset Cache.
