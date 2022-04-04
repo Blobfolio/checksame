@@ -9,7 +9,7 @@ use blake3::{
 };
 use rayon::{
 	iter::{
-		IntoParallelIterator,
+		IntoParallelRefIterator,
 		ParallelIterator,
 	},
 	slice::ParallelSliceMut,
@@ -18,6 +18,7 @@ use std::{
 	fmt,
 	fs::File,
 	hash::Hasher,
+	os::unix::ffi::OsStrExt,
 	path::{
 		Path,
 		PathBuf,
@@ -105,22 +106,19 @@ impl fmt::Display for CheckSame {
 
 impl From<Vec<PathBuf>> for CheckSame {
 	fn from(paths: Vec<PathBuf>) -> Self {
-		// First pass, hash all the files, consuming the original vector.
-		let mut raw: Vec<(String, [u8; 32])> = paths.into_par_iter()
-			.map(|p| {
-				let hash = hash_file(&p);
-				(p.to_string_lossy().into_owned(), hash)
-			})
+		// First pass: hash all the files.
+		let mut raw: Vec<(&[u8], [u8; 32])> = paths.par_iter()
+			.map(|p| (p.as_os_str().as_bytes(), hash_file(p)))
 			.collect();
 
-		// Resort by path for consistency.
+		// Sort by paths for consistency.
 		raw.par_sort_by(|(a, _), (b, _)| a.cmp(b));
 
-		// Second pass, build the cumulative file/key hashes.
+		// Second pass: build the cumulative file/key hashes.
 		let mut key_h = AHasher::new_with_keys(1319, 2371);
 		let mut all_h = BHasher::new();
 		for (p, h) in raw {
-			key_h.write(p.as_bytes());
+			key_h.write(p);
 			all_h.update(&h);
 		}
 
