@@ -106,10 +106,6 @@ use hash::{
 	FLAG_CACHE,
 	FLAG_RESET,
 };
-use std::{
-	ffi::OsStr,
-	os::unix::ffi::OsStrExt,
-};
 
 
 
@@ -147,9 +143,7 @@ fn _main() -> Result<(), CheckSameError> {
 
 	// Build it.
 	let hash = CheckSame::new(
-		Dowser::default()
-			.with_paths(args.args().iter().map(|x| OsStr::from_bytes(x.as_ref())))
-			.into_vec(),
+		Dowser::default().with_paths(args.args_os()).collect(),
 		flags
 	)?;
 
