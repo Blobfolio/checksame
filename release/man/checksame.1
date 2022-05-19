@@ -1,6 +1,6 @@
-.TH "CHECKSAME" "1" "April 2022" "CheckSame v0.2.10" "User Commands"
+.TH "CHECKSAME" "1" "May 2022" "CheckSame v0.3.0" "User Commands"
 .SH NAME
-CheckSame \- Manual page for checksame v0.2.10.
+CheckSame \- Manual page for checksame v0.3.0.
 .SH DESCRIPTION
 Generate single Blake3 hashes from any number of files or directories.
 .SS USAGE:
@@ -12,17 +12,17 @@ checksame [FLAGS] [OPTIONS] <PATH(s)…>
 Cache the hash and output the status.
 .TP
 \fB\-h\fR, \fB\-\-help\fR
-Print help information.
+Print help information and exit.
 .TP
 \fB\-\-reset\fR
 Reset any previously\-saved hash keys before starting.
 .TP
 \fB\-V\fR, \fB\-\-version\fR
-Print program version.
+Print program version and exit.
 .SS OPTIONS:
 .TP
 \fB\-l\fR, \fB\-\-list\fR <FILE>
-Read file paths from this text file.
+Read (absolute) file and/or directory paths from this text file, one entry per line.
 .SS <PATH(S)…>:
 .TP
 Any number of files and directories to crawl and crunch.
