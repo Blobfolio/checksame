@@ -51,13 +51,14 @@ cargo build \
 It's easy. Just run `checksame [FLAGS] [OPTIONS] <PATH(S)>…`.
 
 The following flags and options are available:
-```bash
--c, --cache       Cache the hash and output the status.
--h, --help        Prints help information.
--l, --list <list> Read file paths from this list.
-    --reset       Reset any previously-saved hash keys before starting.
--V, --version     Prints version information.
-```
+
+| Short | Long | Value | Description |
+| ----- | ---- | ----- | ----------- |
+| `-c` | `--cache` | | Cache the hash and output the status. |
+| `-h` | `--help` | | Print help information and exit. |
+| `-l` | `--list` | `<FILE>` | Read (absolute) file and/or directory paths from this text file, one entry per line. |
+| | `--reset` | | Reset any previously-saved hash keys before starting. |
+| `-V` | `--version` | | Print program version and exit. |
 
 For example:
 ```bash
