@@ -1,10 +1,10 @@
 [package]
 name = "checksame"
-version = "0.3.0"
+version = "0.3.1"
 license = "WTFPL"
 authors = ["Josh Stoik <josh@blobfolio.com>"]
 edition = "2021"
-rust-version = "1.59"
+rust-version = "1.61"
 description = "Generate single Blake3 hashes from any number of files or directories."
 repository = "https://github.com/Blobfolio/checksame"
 readme = "README.md"
@@ -12,7 +12,6 @@ publish = false
 exclude = [
 	".gitignore",
 	".righteous-sandbox.json",
-	"about.toml",
 	"doc",
 	"justfile",
 	"release",
@@ -83,9 +82,9 @@ lines = [
 
 [dependencies]
 ahash = "=0.7.6"
-argyle = "0.5.*, >=0.5.3"
+argyle = "0.6.*"
 blake3 = "=1.3.1"
-dowser = "0.4.*"
+dowser = "0.5.*"
 fyi_msg = "0.9.*"
 rayon = "=1.5.3"
 
