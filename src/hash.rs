@@ -2,7 +2,6 @@
 # `CheckSame` - Hasher
 */
 
-use ahash::AHasher;
 use blake3::{
 	Hash,
 	Hasher as BHasher,
@@ -25,6 +24,7 @@ use std::{
 	},
 };
 use super::CheckSameError;
+use wyhash::WyHash;
 
 
 
@@ -115,7 +115,7 @@ impl From<Vec<PathBuf>> for CheckSame {
 		raw.par_sort_by(|(a, _), (b, _)| a.cmp(b));
 
 		// Second pass: build the cumulative file/key hashes.
-		let mut key_h = AHasher::new_with_keys(1319, 2371);
+		let mut key_h = WyHash::with_seed(13);
 		let mut all_h = BHasher::new();
 		for (p, h) in raw {
 			key_h.write(p);
