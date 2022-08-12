@@ -1,7 +1,7 @@
 # Project Dependencies
     Package:   checksame
-    Version:   0.3.2
-    Generated: 2022-08-11 20:16:12 UTC
+    Version:   0.3.3
+    Generated: 2022-08-12 08:09:23 UTC
 
 | Package | Version | Author(s) | License |
 | ---- | ---- | ---- | ---- |
@@ -29,10 +29,8 @@
 | [num-traits](https://github.com/rust-num/num-traits) | 0.2.15 | The Rust Project Developers | Apache-2.0 or MIT |
 | [num_cpus](https://github.com/seanmonstar/num_cpus) | 1.13.1 | [Sean McArthur](mailto:sean@seanmonstar.com) | Apache-2.0 or MIT |
 | [once_cell](https://github.com/matklad/once_cell) | 1.13.0 | [Aleksey Kladov](mailto:aleksey.kladov@gmail.com) | Apache-2.0 or MIT |
-| [rand_core](https://github.com/rust-random/rand) | 0.6.3 | The Rand Project Developers and The Rust Project Developers | Apache-2.0 or MIT |
 | [rayon](https://github.com/rayon-rs/rayon) | 1.5.3 | [Niko Matsakis](mailto:niko@alum.mit.edu) and [Josh Stone](mailto:cuviper@gmail.com) | Apache-2.0 or MIT |
 | [rayon-core](https://github.com/rayon-rs/rayon) | 1.9.3 | [Niko Matsakis](mailto:niko@alum.mit.edu) and [Josh Stone](mailto:cuviper@gmail.com) | Apache-2.0 or MIT |
 | [scopeguard](https://github.com/bluss/scopeguard) | 1.1.0 | bluss | Apache-2.0 or MIT |
 | [subtle](https://github.com/dalek-cryptography/subtle) | 2.4.1 | [Isis Lovecruft](mailto:isis@patternsinthevoid.net) and [Henry de Valence](mailto:hdevalence@hdevalence.ca) | BSD-3-Clause |
 | [typenum](https://github.com/paholg/typenum) | 1.15.0 | [Paho Lurie-Gregg](mailto:paho@paholg.com) and [Andre Bogus](mailto:bogusandre@gmail.com) | Apache-2.0 or MIT |
-| [wyhash](https://github.com/eldruin/wyhash-rs) | 0.5.0 | [Diego Barrios Romero](mailto:eldruin@gmail.com) | Apache-2.0 or MIT |
