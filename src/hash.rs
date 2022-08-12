@@ -16,7 +16,10 @@ use rayon::{
 use std::{
 	fmt,
 	fs::File,
-	hash::Hasher,
+	hash::{
+		BuildHasher,
+		Hasher,
+	},
 	os::unix::ffi::OsStrExt,
 	path::{
 		Path,
@@ -24,7 +27,6 @@ use std::{
 	},
 };
 use super::CheckSameError;
-use wyhash::WyHash;
 
 
 
@@ -115,7 +117,7 @@ impl From<Vec<PathBuf>> for CheckSame {
 		raw.par_sort_by(|(a, _), (b, _)| a.cmp(b));
 
 		// Second pass: build the cumulative file/key hashes.
-		let mut key_h = WyHash::with_seed(13);
+		let mut key_h = ahash::RandomState::with_seeds(13, 19, 23, 71).build_hasher();
 		let mut all_h = BHasher::new();
 		for (p, h) in raw {
 			key_h.write(p);
