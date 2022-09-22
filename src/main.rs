@@ -88,7 +88,7 @@ fn _main() -> Result<(), CheckSameError> {
 
 	// Build it.
 	let hash = CheckSame::new(
-		Dowser::default().with_paths(args.args_os()).collect(),
+		Dowser::default().with_paths(args.args_os()).into_vec(),
 		flags
 	)?;
 
