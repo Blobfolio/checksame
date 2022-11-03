@@ -1,11 +1,11 @@
 # Project Dependencies
     Package:   checksame
-    Version:   0.3.4
-    Generated: 2022-09-22 19:26:00 UTC
+    Version:   0.3.5
+    Generated: 2022-11-03 15:44:28 UTC
 
 | Package | Version | Author(s) | License |
 | ---- | ---- | ---- | ---- |
-| [ahash](https://github.com/tkaitchuck/ahash) | 0.8.0 | [Tom Kaitchuck](mailto:tom.kaitchuck@gmail.com) | Apache-2.0 or MIT |
+| [ahash](https://github.com/tkaitchuck/ahash) | 0.8.1 | [Tom Kaitchuck](mailto:tom.kaitchuck@gmail.com) | Apache-2.0 or MIT |
 | [argyle](https://github.com/Blobfolio/argyle) | 0.6.3 | [Blobfolio, LLC.](mailto:hello@blobfolio.com) | WTFPL |
 | [arrayref](https://github.com/droundy/arrayref) | 0.3.6 | [David Roundy](mailto:roundyd@physics.oregonstate.edu) | BSD-2-Clause |
 | [arrayvec](https://github.com/bluss/arrayvec) | 0.7.2 | bluss | Apache-2.0 or MIT |
@@ -15,19 +15,18 @@
 | [constant_time_eq](https://github.com/cesarb/constant_time_eq) | 0.1.5 | [Cesar Eduardo Barros](mailto:cesarb@cesarb.eti.br) | CC0-1.0 |
 | [crossbeam-channel](https://github.com/crossbeam-rs/crossbeam) | 0.5.6 |  | Apache-2.0 or MIT |
 | [crossbeam-deque](https://github.com/crossbeam-rs/crossbeam) | 0.8.2 |  | Apache-2.0 or MIT |
-| [crossbeam-epoch](https://github.com/crossbeam-rs/crossbeam) | 0.9.10 |  | Apache-2.0 or MIT |
-| [crossbeam-utils](https://github.com/crossbeam-rs/crossbeam) | 0.8.11 |  | Apache-2.0 or MIT |
+| [crossbeam-epoch](https://github.com/crossbeam-rs/crossbeam) | 0.9.11 |  | Apache-2.0 or MIT |
+| [crossbeam-utils](https://github.com/crossbeam-rs/crossbeam) | 0.8.12 |  | Apache-2.0 or MIT |
 | [crypto-common](https://github.com/RustCrypto/traits) | 0.1.6 | RustCrypto Developers | Apache-2.0 or MIT |
-| [dactyl](https://github.com/Blobfolio/dactyl) | 0.4.5 | [Blobfolio, LLC.](mailto:hello@blobfolio.com) | WTFPL |
+| [dactyl](https://github.com/Blobfolio/dactyl) | 0.4.6 | [Blobfolio, LLC.](mailto:hello@blobfolio.com) | WTFPL |
 | [digest](https://github.com/RustCrypto/traits) | 0.10.5 | RustCrypto Developers | Apache-2.0 or MIT |
-| [dowser](https://github.com/Blobfolio/dowser) | 0.6.2 | [Blobfolio, LLC.](mailto:hello@blobfolio.com) | WTFPL |
+| [dowser](https://github.com/Blobfolio/dowser) | 0.6.3 | [Blobfolio, LLC.](mailto:hello@blobfolio.com) | WTFPL |
 | [either](https://github.com/bluss/either) | 1.8.0 | bluss | Apache-2.0 or MIT |
-| [fyi_msg](https://github.com/Blobfolio/fyi) | 0.10.2 | [Blobfolio, LLC.](mailto:hello@blobfolio.com) | WTFPL |
+| [fyi_msg](https://github.com/Blobfolio/fyi) | 0.10.3 | [Blobfolio, LLC.](mailto:hello@blobfolio.com) | WTFPL |
 | [generic-array](https://github.com/fizyk20/generic-array.git) | 0.14.6 | [Bartłomiej Kamiński](mailto:fizyk20@gmail.com) and [Aaron Trent](mailto:novacrazy@gmail.com) | MIT |
 | [memoffset](https://github.com/Gilnaa/memoffset) | 0.6.5 | [Gilad Naaman](mailto:gilad.naaman@gmail.com) | MIT |
 | [num-traits](https://github.com/rust-num/num-traits) | 0.2.15 | The Rust Project Developers | Apache-2.0 or MIT |
 | [num_cpus](https://github.com/seanmonstar/num_cpus) | 1.13.1 | [Sean McArthur](mailto:sean@seanmonstar.com) | Apache-2.0 or MIT |
-| [once_cell](https://github.com/matklad/once_cell) | 1.15.0 | [Aleksey Kladov](mailto:aleksey.kladov@gmail.com) | Apache-2.0 or MIT |
 | [rayon](https://github.com/rayon-rs/rayon) | 1.5.3 | [Niko Matsakis](mailto:niko@alum.mit.edu) and [Josh Stone](mailto:cuviper@gmail.com) | Apache-2.0 or MIT |
 | [rayon-core](https://github.com/rayon-rs/rayon) | 1.9.3 | [Niko Matsakis](mailto:niko@alum.mit.edu) and [Josh Stone](mailto:cuviper@gmail.com) | Apache-2.0 or MIT |
 | [scopeguard](https://github.com/bluss/scopeguard) | 1.1.0 | bluss | Apache-2.0 or MIT |
