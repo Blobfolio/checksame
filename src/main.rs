@@ -93,7 +93,7 @@ fn _main() -> Result<(), CheckSameError> {
 	)?;
 
 	// Print it.
-	println!("{}", hash);
+	println!("{hash}");
 
 	// Done!
 	Ok(())
