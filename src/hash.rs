@@ -2,10 +2,7 @@
 # `CheckSame` - Hasher
 */
 
-use blake3::{
-	Hash,
-	Hasher as BHasher,
-};
+use blake3::Hasher as BHasher;
 use rayon::{
 	iter::{
 		IntoParallelRefIterator,
@@ -80,13 +77,9 @@ pub(super) struct CheckSame {
 
 	/// # Hash.
 	///
-	/// This is the cumulative `Blake3` hash of all included files. It is
-	/// calculated by hashing each file individually, in order, then hashing
-	/// those hashes.
-	///
-	/// This avoids the overhead of having to keep all file contents in memory
-	/// long enough to come up with a single hash.
-	hash: Hash,
+	/// This is the cumulative hash of all included files, calculated by
+	/// running the individual `Blake3` checksums through `ahash`.
+	hash: u64,
 
 	/// # Cache status.
 	///
@@ -98,7 +91,7 @@ pub(super) struct CheckSame {
 impl fmt::Display for CheckSame {
 	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
 		match self.status {
-			CheckedSame::Noop => f.write_str(&self.hash.to_hex()),
+			CheckedSame::Noop => write!(f, "{:x}", self.hash),
 			CheckedSame::Same => f.write_str("0"),
 			CheckedSame::Changed => f.write_str("1"),
 			CheckedSame::New => f.write_str("-1"),
@@ -118,16 +111,16 @@ impl From<Vec<PathBuf>> for CheckSame {
 
 		// Second pass: build the cumulative file/key hashes.
 		let mut key_h = ahash::RandomState::with_seeds(13, 19, 23, 71).build_hasher();
-		let mut all_h = BHasher::new();
+		let mut all_h = ahash::RandomState::with_seeds(13, 19, 23, 71).build_hasher();
 		for (p, h) in raw {
 			key_h.write(p);
-			all_h.update(&h);
+			all_h.write(h.as_slice());
 		}
 
 		// We're done!
 		Self {
 			key: key_h.finish(),
-			hash: all_h.finalize(),
+			hash: all_h.finish(),
 			status: CheckedSame::Noop,
 		}
 	}
@@ -205,12 +198,12 @@ impl CheckSame {
 		path.push(self.key.to_string());
 
 		// Get the hash as bytes.
-		let bytes: &[u8] = self.hash.as_bytes();
+		let bytes: [u8; 8] = self.hash.to_le_bytes();
 
 		// This is already cached.
 		if path.is_file() {
 			// If it is unchanged, we're done!
-			if std::fs::read(&path).unwrap_or_default() == bytes {
+			if std::fs::read(&path).map_or(false, |b| b == bytes) {
 				self.status = CheckedSame::Same;
 				return Ok(());
 			}
@@ -224,7 +217,7 @@ impl CheckSame {
 
 		// Save it for next time.
 		File::create(&path)
-			.and_then(|mut out| out.write_all(bytes).and_then(|_| out.flush()))
+			.and_then(|mut out| out.write_all(&bytes).and_then(|_| out.flush()))
 			.map_err(|_| CheckSameError::Write)
 	}
 }
