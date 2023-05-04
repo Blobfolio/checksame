@@ -48,6 +48,7 @@ jobs:
 
     - name: Build
       run: |
+        cargo build --bin checksame --target ${{ matrix.target }}
         cargo build --bin checksame --release --target ${{ matrix.target }}
 
     - name: Clippy
