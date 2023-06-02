@@ -83,7 +83,7 @@ lines = [
 [dependencies]
 argyle = "0.6.*"
 blake3 = "=1.3.3"
-dowser = "0.7.*"
+dowser = "0.8.*"
 fyi_msg = "0.10.*"
 rayon = "1.7.*"
 
