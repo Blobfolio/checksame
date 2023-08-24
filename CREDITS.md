@@ -1,7 +1,7 @@
 # Project Dependencies
     Package:   checksame
-    Version:   0.4.1
-    Generated: 2023-07-13 20:06:00 UTC
+    Version:   0.4.2
+    Generated: 2023-08-24 18:36:03 UTC
 
 | Package | Version | Author(s) | License |
 | ---- | ---- | ---- | ---- |
@@ -21,14 +21,14 @@
 | [dactyl](https://github.com/Blobfolio/dactyl) | 0.5.1 | [Blobfolio, LLC.](mailto:hello@blobfolio.com) | WTFPL |
 | [digest](https://github.com/RustCrypto/traits) | 0.10.7 | RustCrypto Developers | Apache-2.0 or MIT |
 | [dowser](https://github.com/Blobfolio/dowser) | 0.8.0 | [Blobfolio, LLC.](mailto:hello@blobfolio.com) | WTFPL |
-| [either](https://github.com/bluss/either) | 1.8.1 | bluss | Apache-2.0 or MIT |
-| [fyi_msg](https://github.com/Blobfolio/fyi) | 0.11.1 | [Blobfolio, LLC.](mailto:hello@blobfolio.com) | WTFPL |
+| [either](https://github.com/bluss/either) | 1.9.0 | bluss | Apache-2.0 or MIT |
+| [fyi_msg](https://github.com/Blobfolio/fyi) | 0.11.2 | [Blobfolio, LLC.](mailto:hello@blobfolio.com) | WTFPL |
 | [generic-array](https://github.com/fizyk20/generic-array.git) | 0.14.7 | [Bartłomiej Kamiński](mailto:fizyk20@gmail.com) and [Aaron Trent](mailto:novacrazy@gmail.com) | MIT |
 | [memoffset](https://github.com/Gilnaa/memoffset) | 0.9.0 | [Gilad Naaman](mailto:gilad.naaman@gmail.com) | MIT |
-| [num-traits](https://github.com/rust-num/num-traits) | 0.2.15 | The Rust Project Developers | Apache-2.0 or MIT |
+| [num-traits](https://github.com/rust-num/num-traits) | 0.2.16 | The Rust Project Developers | Apache-2.0 or MIT |
 | [num_cpus](https://github.com/seanmonstar/num_cpus) | 1.16.0 | [Sean McArthur](mailto:sean@seanmonstar.com) | Apache-2.0 or MIT |
 | [rayon](https://github.com/rayon-rs/rayon) | 1.7.0 | [Niko Matsakis](mailto:niko@alum.mit.edu) and [Josh Stone](mailto:cuviper@gmail.com) | Apache-2.0 or MIT |
 | [rayon-core](https://github.com/rayon-rs/rayon) | 1.11.0 | [Niko Matsakis](mailto:niko@alum.mit.edu) and [Josh Stone](mailto:cuviper@gmail.com) | Apache-2.0 or MIT |
-| [scopeguard](https://github.com/bluss/scopeguard) | 1.1.0 | bluss | Apache-2.0 or MIT |
+| [scopeguard](https://github.com/bluss/scopeguard) | 1.2.0 | bluss | Apache-2.0 or MIT |
 | [subtle](https://github.com/dalek-cryptography/subtle) | 2.5.0 | [Isis Lovecruft](mailto:isis@patternsinthevoid.net) and [Henry de Valence](mailto:hdevalence@hdevalence.ca) | BSD-3-Clause |
 | [typenum](https://github.com/paholg/typenum) | 1.16.0 | [Paho Lurie-Gregg](mailto:paho@paholg.com) and [Andre Bogus](mailto:bogusandre@gmail.com) | Apache-2.0 or MIT |
