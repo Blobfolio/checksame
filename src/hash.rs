@@ -217,7 +217,7 @@ impl CheckSame {
 
 		// Save it for next time.
 		File::create(&path)
-			.and_then(|mut out| out.write_all(&bytes).and_then(|_| out.flush()))
+			.and_then(|mut out| out.write_all(&bytes).and_then(|()| out.flush()))
 			.map_err(|_| CheckSameError::Write)
 	}
 }

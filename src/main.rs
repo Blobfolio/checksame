@@ -57,7 +57,7 @@ use hash::{
 /// # Main.
 fn main() {
 	match _main() {
-		Ok(_) | Err(CheckSameError::Noop) => {},
+		Ok(()) | Err(CheckSameError::Noop) => {},
 		Err(CheckSameError::Argue(ArgyleError::WantsVersion)) => {
 			println!(concat!("CheckSame v", env!("CARGO_PKG_VERSION")));
 		},
