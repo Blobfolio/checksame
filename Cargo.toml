@@ -65,7 +65,7 @@ description = "Print program version and exit."
 short = "-l"
 long = "--list"
 label = "<FILE>"
-description = "Read (absolute) file and/or directory paths from this text file, one entry per line."
+description = "Read (absolute) file and/or directory paths to checksum from this text file — or STDIN if '-' — one entry per line, instead of or in addition to specifying <PATH(S)> at the end of the command."
 path = true
 
 [[package.metadata.bashman.arguments]]
@@ -81,7 +81,7 @@ lines = [
 ]
 
 [dependencies]
-argyle = "0.6.*"
+argyle = "0.7.*"
 blake3 = "=1.5.0"
 dowser = "0.8.*"
 fyi_msg = "0.11.*"

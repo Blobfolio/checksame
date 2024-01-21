@@ -115,7 +115,7 @@ fn helper() {
 |  ' /     --'
 |  .   '.__\
 ;  :       /
- ;  .     |            ,   ", "\x1b[38;5;199mCheckSame\x1b[0;38;5;69m v", env!("CARGO_PKG_VERSION"), "\x1b[0m", r"
+ ;  .     |            ,   ", "\x1b[38;5;199mCheckSame\x1b[0;38;5;69m v", env!("CARGO_PKG_VERSION"), "\x1b[0m", r#"
   ;  .    \           /|   Cumulative file hashing
    \  .    '.       .'/    and change detection.
     '.  '  . `'---'`.'
@@ -132,11 +132,13 @@ FLAGS:
     -V, --version     Print version information and exit.
 
 OPTIONS:
-    -l, --list <FILE> Read (absolute) file and/or directory paths from this
-                      text file, one entry per line.
+    -l, --list <FILE> Read (absolute) file and/or directory paths to checksum
+                      from this text file — or STDIN if "-" — one entry per
+                      line, instead of or in addition to specifying <PATH(S)>
+                      at the end of the command.
 
 ARGS:
-    <PATH(S)>...    One or more files or directories to compress.
+    <PATH(S)>...      One or more files or directories to checksum.
 
 By default, this will print a single 64-character Blake3 hash for the file(s)
 to STDOUT.
@@ -144,6 +146,6 @@ to STDOUT.
 In --cache mode, the hash will be cached and compared against the previous run.
 A value of -1, 0, or 1 will be printed instead, indicating NEW, UNCHANGED, or
 CHANGED, respectively.
-",
+"#,
 	));
 }
