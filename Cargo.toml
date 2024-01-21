@@ -1,6 +1,6 @@
 [package]
 name = "checksame"
-version = "0.4.3"
+version = "0.4.4"
 license = "WTFPL"
 authors = ["Josh Stoik <josh@blobfolio.com>"]
 edition = "2021"
@@ -19,7 +19,7 @@ exclude = [
 
 [package.metadata.deb]
 maintainer = "Josh Stoik <hello@blobfolio.com>"
-copyright = "2022, Blobfolio, LLC <hello@blobfolio.com>"
+copyright = "2024, Blobfolio, LLC <hello@blobfolio.com>"
 license-file = ["./LICENSE", "0"]
 extended-description = """\n\
 CheckSame is a recursive, cumulative Blake3 file hasher for x86-64 Linux machines.\n\
@@ -31,7 +31,7 @@ revision = "1"
 depends = "$auto"
 section = "utils"
 assets = [
-    ["./target/x86_64-unknown-linux-gnu/release/checksame", "usr/bin/", "755"],
+    ["./target/release/checksame", "usr/bin/", "755"],
     ["./release/completions/checksame.bash", "etc/bash_completion.d/", "644"],
     ["./release/man/checksame.1.gz", "usr/share/man/man1/", "644"],
 ]
@@ -65,7 +65,7 @@ description = "Print program version and exit."
 short = "-l"
 long = "--list"
 label = "<FILE>"
-description = "Read (absolute) file and/or directory paths from this text file, one entry per line."
+description = "Read (absolute) file and/or directory paths to checksum from this text file — or STDIN if '-' — one entry per line, instead of or in addition to specifying <PATH(S)> at the end of the command."
 path = true
 
 [[package.metadata.bashman.arguments]]
@@ -81,7 +81,7 @@ lines = [
 ]
 
 [dependencies]
-argyle = "0.6.*"
+argyle = "0.7.*"
 blake3 = "=1.5.0"
 dowser = "0.8.*"
 fyi_msg = "0.11.*"
