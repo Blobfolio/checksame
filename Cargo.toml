@@ -31,7 +31,7 @@ revision = "1"
 depends = "$auto"
 section = "utils"
 assets = [
-    ["./target/x86_64-unknown-linux-gnu/release/checksame", "usr/bin/", "755"],
+    ["./target/release/checksame", "usr/bin/", "755"],
     ["./release/completions/checksame.bash", "etc/bash_completion.d/", "644"],
     ["./release/man/checksame.1.gz", "usr/share/man/man1/", "644"],
 ]
