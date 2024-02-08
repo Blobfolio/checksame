@@ -84,7 +84,7 @@ lines = [
 argyle = "0.7.*"
 blake3 = "=1.5.0"
 dowser = "0.8.*"
-fyi_msg = "0.11.*"
+fyi_msg = "0.12.*"
 rayon = "1.8.*"
 
 [dependencies.ahash]
