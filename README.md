@@ -58,7 +58,7 @@ The following flags and options are available:
 | ----- | ---- | ----- | ----------- |
 | `-c` | `--cache` | | Cache the hash and output the status. |
 | `-h` | `--help` | | Print help information and exit. |
-| `-l` | `--list` | `<FILE>` | Read (absolute) file and/or directory paths from this text file, one entry per line. |
+| `-l` | `--list` | `<FILE>` | Read (absolute) file and/or directory paths to checksum from this text file — or STDIN if "-" — one entry per line, instead of or in addition to `<PATH(S)>`. |
 | | `--reset` | | Reset any previously-saved hash keys before starting. |
 | `-V` | `--version` | | Print program version and exit. |
 
