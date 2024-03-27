@@ -84,7 +84,7 @@ argyle = "0.7.*"
 blake3 = "=1.5.1"
 dowser = "0.9.*"
 fyi_msg = "0.13.*"
-rayon = "1.9.*"
+rayon = "1.10.*"
 
 [dependencies.ahash]
 version = "0.8.*"
